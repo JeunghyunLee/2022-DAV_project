@@ -55,10 +55,14 @@ option = st.sidebar.selectbox(
 
 
 # 지도 그림
+
+import json
+geodata = json.load(open('stanford-dk009rq9138-geojson.json', 'r',encoding='utf-8'))
+
 map = folium.Map(location=[36,127], zoom_start=7, scrollWheelZoom = False, tiles='CartoDB positron')
 
 choropleth = folium.Choropleth(
-    geo_data='stanford-dk009rq9138-geojson.json',
+    geo_data=geodata,
     data = df,
     columns=('지역', '평균열대야일수') ,
     key_on='feature.properties.name_1'
