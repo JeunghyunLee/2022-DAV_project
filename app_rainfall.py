@@ -60,7 +60,7 @@ menu = ["서울경기","강원영동","강원영서","경남","경북","전남",
 area = st.selectbox("지역",menu)
 
 # load data and preprocessing labels
-fn = "rainfall_data/%s.csv"%area
+fn = "data_rain/%s.csv"%area
 df = preprocess(fn)
 gb = dict(list(df.groupby('year')))
 
@@ -125,7 +125,7 @@ with st.container():
 import json
 geodata = json.load(open('stanford-dk009rq9138-geojson.json', 'r',encoding='utf-8'))
 
-df = pd.read_csv('tropicalnight_data/seoulgyeonggi_tropical.csv')
+df = pd.read_csv('data_tropicalnight/서울경기.csv')
 df.drop(columns='Unnamed: 0', inplace = True)
 df.insert(0, '지역', 'Gyeonggi-do')
 map = folium.Map(location=[36,127], zoom_start=7, scrollWheelZoom = False, tiles='CartoDB positron')

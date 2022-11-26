@@ -26,7 +26,7 @@ st.subheader('1973년 ~ 2022년 월별 평균열대야일수')
 
 
 # load data
-df = pd.read_csv('seoulgyeonggi_tropical.csv')
+df = pd.read_csv('data_tropicalnight/서울경기.csv')
 df.drop(columns='Unnamed: 0', inplace = True)
 df.insert(0, '지역', 'Gyeonggi-do')
 df1 = df[(df['월']=='6월') | (df['월']=='7월') | (df['월']=='8월') | (df['월']=='9월')]
