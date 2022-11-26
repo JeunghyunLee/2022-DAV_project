@@ -2,6 +2,9 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 import time
+import folium
+from folium.plugins import HeatMap
+from streamlit_folium import st_folium
 
 
 def preprocess(fn):
@@ -118,3 +121,21 @@ with st.container():
         st.text(year)
     st.button("Play",on_click=animation,args=(animated,namespace,year,years))
 
+
+import json
+geodata = json.load(open('stanford-dk009rq9138-geojson.json', 'r',encoding='utf-8'))
+
+df = pd.read_csv('tropicalnight_data/seoulgyeonggi_tropical.csv')
+df.drop(columns='Unnamed: 0', inplace = True)
+df.insert(0, '지역', 'Gyeonggi-do')
+map = folium.Map(location=[36,127], zoom_start=7, scrollWheelZoom = False, tiles='CartoDB positron')
+
+choropleth = folium.Choropleth(
+    geo_data=geodata,
+    data = df,
+    columns=('지역', '평균열대야일수') ,
+    key_on='feature.properties.name_1'
+)
+choropleth.geojson.add_to(map)
+
+st_map = st_folium(map, width=500, height=660)

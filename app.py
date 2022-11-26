@@ -7,7 +7,7 @@ import plotly.express as px
 
 
 path = ''
-df = pd.read_csv(path + 'C:/Users/jadec/DAVproj/temp/1121merged_temp.csv')
+df = pd.read_csv(path + 'temp_data/1121merged_temp.csv')
 df = df.iloc[:, 1:]
 df.columns = ['date', 'avg', 'min', 'max', 'city_name', 'year', 'month', 'day', 'dailydiff']
 df = df.dropna()
