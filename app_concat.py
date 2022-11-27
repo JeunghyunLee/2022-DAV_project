@@ -12,6 +12,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 import xgboost as xgb
+import plotly.express as px
+
 from folium.plugins import HeatMap
 from folium.features import DivIcon
 from streamlit_folium import folium_static, st_folium
@@ -40,6 +42,7 @@ df_tropicalnight = load_data('tropicalnight')
 
 
 
+
 #### ------------------------------------
 ### STREAMLIT
 # First choose which area to display
@@ -48,6 +51,7 @@ option = st.sidebar.selectbox(
     '아래에서 지역을 선택하세요.',
     ('서울경기', '강원영동', '강원영서', '충북', "충남", "경북", "경남", "전북", "전남", "제주"))
 
+st.sidebar.markdown("# 데이터 선택 📍")
 if st.sidebar.checkbox('열대야'):
     st.subheader('평균 열대야 일수')
     st.subheader(f'{option} 지역의 월별 평균 열대야일 수(1973년~2022년)')
@@ -60,7 +64,7 @@ if st.sidebar.checkbox('열대야'):
 
     # Map
     # geodata = json.load(open('stanford-dk009rq9138-geojson.json', 'r',encoding='utf-8'))
-    geodata = json.load(open('geojson_kr.json', 'r',encoding='utf-8'))
+    geodata = json.load(open('korea_geojson2.geojson', 'r',encoding='utf-8'))
     map = folium.Map(location=[36,127], zoom_start=7, 
                      scrollWheelZoom = False, 
                      tiles='CartoDB positron')
@@ -70,23 +74,32 @@ if st.sidebar.checkbox('열대야'):
 
     m = folium.Map(location=[35.8, 128.071503], zoom_start=7,)
 
-    ch = folium.Choropleth(
-        geo_data = geodata,
-        name='choropleth',
-        data = df_tropicalnight,
-        columns=['지역', '평균열대야일수'], 
-        key_on='feature.properties.CTP_KOR_NM',  
-        fill_color='YlGn',
-        fill_opacity=0.7,
-        line_opacity=1,  
-        line_weight=1.5,
-        line_color='#000',
-        legend_name='시도별 열대야 일수').add_to(m)
-    ch.geojson.add_to(map)
-
+    ch = px.choropleth(
+        # geo_data = geodata,
+        # name='choropleth',
+        # data = df_tropicalnight,
+        # columns=['지역', '평균열대야일수'], 
+        df_tropicalnight,
+        geojson = geodata, 
+        featureidkey="properties.CTP_KOR_NM",
+        locations='지역',
+        color = '평균열대야일수',
+        color_continuous_scale=px.colors.sequential.Redor,
+        
+        # key_on='feature.properties.CTP_KOR_NM',  
+        # fill_color='YlGn',
+        # fill_opacity=0.7,
+        # line_opacity=1,  
+        # line_weight=1.5,
+        # line_color='#000',
+        # legend_name='시도별 열대야 일수').add_to(m)
+    )
+    # ch.geojson.add_to(map)
+    ch.update_geos(fitbounds='locations',visible=False)
+    ch.update_layout(margin={"r":0,"l":0,"t":0,"b":0})
+    ch
 
     st_map = st_folium(map, width=500, height=660)
-
 
     # 위도경도 매핑
     locs = {
