@@ -41,8 +41,6 @@ def load_data(data_type):
 df_tropicalnight = load_data('tropicalnight')
 
 
-
-
 #### ------------------------------------
 ### STREAMLIT
 # First choose which area to display
