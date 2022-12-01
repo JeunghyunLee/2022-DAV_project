@@ -21,12 +21,19 @@ def preprocess(fn):
     return df
 
 
-def standardBand(data,range=30,color='blue'):
+def standardBand(data,r1=30,r2=30,color='blue'):
     fig,ax = plt.subplots()
         
-    standard = data.rolling(range).mean().shift(-1).fillna(method='ffill')
-    upper = data.rolling(range).quantile(0.9).shift(-1).fillna(method='ffill')
-    lower = data.rolling(range).quantile(0.1).shift(-1).fillna(method='ffill')
+    standard = data.rolling(r1).mean().shift(-1).fillna(method='ffill')
+    standard = standard[standard.index%10==0]
+    standard=standard.reindex(data.index,method='ffill')
+
+    upper = data.rolling(r2).quantile(0.9).shift(-1).fillna(method='ffill')
+    lower = data.rolling(r2).quantile(0.1).shift(-1).fillna(method='ffill')
+    upper = upper[upper.index%10==0]
+    upper=upper.reindex(data.index,method='ffill')
+    lower = lower[lower.index%10==0]
+    lower=lower.reindex(data.index,method='ffill')
     data.plot(color=color,linestyle='dotted')
     standard.plot(color='black')
     ax.fill_between(standard.index,upper,lower,color=color,alpha=0.2)
@@ -55,7 +62,8 @@ def animation(animated, namespace,year, years):
 c = "rainfall"
 years = list(range(1974,2023,1))
 menu = ["서울경기","강원영동","강원영서","경남","경북","전남","전북","충남","충북","제주","전국"]
-
+r1=10
+r2=10
 
 area = st.selectbox("지역",menu)
 
@@ -68,7 +76,7 @@ gb = dict(list(df.groupby('year')))
 
 # Yearly sum
 yearlysum=df.groupby('year').sum()[c]
-fig,ax = standardBand(yearlysum)
+fig,ax = standardBand(yearlysum,r1=r1,r2=r2)
 st.text("연 총 강수량")
 st.pyplot(fig)
 
@@ -79,22 +87,29 @@ c1,c2 = st.columns(2)
 c3,c4 = st.columns(2)
 with c1:
     data = seasonal.loc[:,1]
-    fig,ax = standardBand(data,color='green')
+    fig,ax = standardBand(data,color='green',r1=r1,r2=r2)
     st.text("봄 강수량")
     st.pyplot(fig)
 with c2:
     data = seasonal.loc[:,2]
-    fig,ax = standardBand(data,color='red')
+    fig,ax = standardBand(data,color='red',r1=r1,r2=r2)
     st.text("여름 강수량")
+    ax.cla()
+    summer_p = seasonal.loc[:,2] / yearlysum
+    ax.plot(summer_p)
+
     st.pyplot(fig)
 with c3:
     data = seasonal.loc[:,3]
-    fig,ax = standardBand(data,color='orange')
+    fig,ax = standardBand(data,color='orange',r1=r1,r2=r2)
     st.text("가을 강수량")
     st.pyplot(fig)
 with c4:
     data = seasonal.loc[:,4]
-    fig,ax = standardBand(data,color='blue')
+    fig,ax = standardBand(data,color='blue',r1=r1,r2=r2)
+    winter_p = seasonal.loc[:,4] / yearlysum
+    ax.cla()
+    ax.plot(winter_p)
     st.text("겨울 강수량")
     st.pyplot(fig)
 
@@ -122,20 +137,3 @@ with st.container():
     st.button("Play",on_click=animation,args=(animated,namespace,year,years))
 
 
-import json
-geodata = json.load(open('stanford-dk009rq9138-geojson.json', 'r',encoding='utf-8'))
-
-df = pd.read_csv('data_tropicalnight/서울경기.csv')
-df.drop(columns='Unnamed: 0', inplace = True)
-df.insert(0, '지역', 'Gyeonggi-do')
-map = folium.Map(location=[36,127], zoom_start=7, scrollWheelZoom = False, tiles='CartoDB positron')
-
-choropleth = folium.Choropleth(
-    geo_data=geodata,
-    data = df,
-    columns=('지역', '평균열대야일수') ,
-    key_on='feature.properties.name_1'
-)
-choropleth.geojson.add_to(map)
-
-st_map = st_folium(map, width=500, height=660)

@@ -21,14 +21,16 @@ def loaddata():
     res=res.reset_index()
     return res
 
-def getmap(data):
+def getmap(data,col='avg'):
     fig=px.choropleth_mapbox(data,
         geojson=geojson,
         locations='location',
-        color = 'avg',
+        color = col,
         mapbox_style='carto-positron',
         color_continuous_scale=[(0, "blue"), (1, "red")],
         range_color=[9,20],
+        # animation_frame='year',
+
         center = {'lat':35.757981,'lon':127.661132},
         zoom=5.5,
         labels='data'
@@ -89,7 +91,7 @@ with st.container():
 
     # 지도 그리기
     histfig,hax = plt.subplots()
-    mapfig = getmap(mdf)
+    mapfig = getmap(mdf,col='avg')
     hist.plot(ax = hax,color = 'black')
 
     with label:

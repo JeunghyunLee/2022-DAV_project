@@ -23,7 +23,7 @@ from streamlit_folium import folium_static, st_folium
 ### DATA
 def load_data(data_type):
     # get files in the folder
-    PATH_DATA = f'./data_{data_type}'
+    PATH_DATA = f'data_{data_type}'
     data_raw = os.listdir(PATH_DATA)
     data_files = sorted([file for file in data_raw if 
                          file.endswith(".csv")])
@@ -38,7 +38,7 @@ def load_data(data_type):
         df_tropicalnight = pd.concat([df_tropicalnight,file_], axis  = 0)
     return df_tropicalnight
 
-df_tropicalnight = load_data('tropicalnight')
+df_tropicalnight = load_data('tropical')
 
 
 #### ------------------------------------
