@@ -13,12 +13,14 @@ mapping={
     '충북':['충청북도']
 }
 
-def to_map_df(df,idcol='location',datacol='data'):
-    res = pd.DataFrame(columns = [idcol,datacol])
+def to_map_df(df,idcol='location',datacol=['data']):
+    res = pd.DataFrame(columns = [idcol]+datacol)
     for i in range(len(df)):
-        key,value = df[[idcol,datacol]].iloc[i] 
+        temp = df[[idcol]+datacol].iloc[i] 
+        key=temp[0]
+        values=list(temp[1:])
         if key in mapping:
             for item in mapping[key]:
-                res.loc[len(res)] = [item,value]
+                res.loc[len(res)] = [item]+values
     return res
 
