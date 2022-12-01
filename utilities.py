@@ -1,4 +1,4 @@
-
+import pandas as pd
 
 mapping={
     '강원도':['강원도'],
