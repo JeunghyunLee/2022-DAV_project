@@ -1,8 +1,7 @@
 import pandas as pd
 import json
 import plotly.express as px
-
-
+areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
 mapping={
     '강원도':['강원도'],
     '강원영동':['강원도'],
@@ -15,6 +14,7 @@ mapping={
     '충남': ['충청남도', '세종특별자치시', '대전광역시'],
     '충북':['충청북도']
 }
+years = list(range(1974,2023,1))
 
 def to_map_df(df,idcol='location',datacol=['data']):
     res = pd.DataFrame(columns = [idcol]+datacol)

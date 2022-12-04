@@ -2,10 +2,8 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import pandas as pd
 import time
-from utilities import to_map_df, getmap
+from utilities import to_map_df, getmap, areas, years
 plt.style.use('ggplot')
-years = list(range(1974,2023,1))
-areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
 with st.sidebar:
     region = st.selectbox("Select the City", areas)
 
@@ -68,9 +66,9 @@ def rain_animation(gb, c, rng, speed=0.1):
     
         mapfig=getmap(mdf,col=c,rng=rng)
         hist.plot(ax=hax, color='blue')
-        with e2:
-            st.text(year)
         with e1:
+            st.text(year)
+        with e2:
             c1,c2 = st.columns(2)
             with c1:
                 st.plotly_chart(mapfig,use_container_width=True)
@@ -88,7 +86,7 @@ if __name__=='__main__':
     histfig,hax = plt.subplots()
     gb = aggregate.groupby('year')
     with st.container():
-        year = st.slider("year",min(years),max(years),value=2022)
+        year = st.slider("Select Year",min(years),max(years),value=max(years))
         e1 = st.empty()
         e2 = st.empty()
         temp = gb.get_group(year)    
@@ -97,10 +95,9 @@ if __name__=='__main__':
         
         mapfig=getmap(mdf,col=c,rng=rng)
         hist.plot(ax=hax,color='blue')
-        with e2:
-            st.text(year)
-
         with e1:
+            st.text(year)
+        with e2:
             c1,c2 = st.columns(2)
             with c1:
                 st.plotly_chart(mapfig,use_container_width=True)

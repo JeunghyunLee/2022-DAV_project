@@ -1,13 +1,12 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
-from utilities import to_map_df, getmap
+from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
 plt.style.use('ggplot')
 path="data_temperature/"
 rng = (0,25)
-areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
 with st.sidebar:
     region = st.selectbox("Select the City", areas)
 
@@ -25,9 +24,8 @@ def open_df(name) :
 
 @st.cache
 def loaddata():
-    location = ['서울경기', '강원영동', '강원영서', '경남', '경북', '전남', '전북', '충북', '충남', '제주']
     merged_df = pd.DataFrame()
-    for e in location:
+    for e in areas:
         merged_df = pd.concat([merged_df, open_df(e)], axis = 0)
     return merged_df
 
@@ -68,12 +66,10 @@ color: grey;'
 # load all data
 res= loaddata()
 gb = res.groupby('year')
-years = list(res.year.values.astype(int))
-
 
 with st.container():
     # year slider
-    year = st.slider("year",1973,2022,value=2022)
+    year = st.slider("Select Year",min(years),max(years),value=max(years))
     temp = gb.get_group(year)
 
     # plot

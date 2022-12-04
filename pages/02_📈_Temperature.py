@@ -1,11 +1,14 @@
 import pandas as pd
 import time
-from utilities import to_map_df, getmap
+from utilities import to_map_df, getmap, areas, years
 import matplotlib.pyplot as plt
 import time
 import streamlit as st
 import plotly.express as px
 from streamlit_player import st_player
+rng=(0,20)
+path = 'data_temperature/'
+
 st.set_page_config(
     page_title= 'Temperature', 
     page_icon = ':sunny:',
@@ -17,9 +20,6 @@ st.set_page_config(
         'About': "# 2022 winter Data Sciencen and Visualization project. Contributors:  "
     }
 )
-rng=(0,20)
-path = 'data_temperature/'
-areas =["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주"]
 with st.sidebar:
     region_filter = st.selectbox("Select the City", areas)
 
@@ -65,6 +65,7 @@ def animation(speed = 0.01):
 
 
 
+
 # Load files
 df = pd.DataFrame()
 for name in areas :
@@ -77,24 +78,16 @@ df['date'] = df['date'].apply(lambda x: pd.Timestamp(x.strip()))
 df['year'] = df['date'].dt.year
 df['month'] = df['date'].dt.month
 
-# 상단 제목
-st.markdown(
-        '''### :thermometer: Temperature''')
-
-st.write('### Geographical Statistics')
-
 
 with st.container():
     # load all data
     res=loaddata()
     gb = res.groupby('year')
-    years = list(res.year.values.astype(int))
 
 
     with st.container():
         # year slider
-        year = st.slider('Select Year',1973,2022, (2022))
-        st.write('Selected Year:', year)
+        year = st.slider('Select Year',min(years),max(years), value=max(years))
         temp = gb.get_group(year)
 
         # plot

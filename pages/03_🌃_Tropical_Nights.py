@@ -1,12 +1,11 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-from utilities import to_map_df, getmap
+from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
 import altair as alt 
 plt.style.use('ggplot')
 rng = (0,25)
-areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
 with st.sidebar:
     region = st.selectbox("Select the City", areas)
 
@@ -43,11 +42,10 @@ def animation(speed = 0.1):
 # load all data
 res= pd.read_csv('data_tropical/total.csv')
 gb = res.groupby('year')
-years = list(res.year.values.astype(int))
 
 with st.container():
     # year slider
-    year = st.slider("year",1973,2022, value=2022)
+    year = st.slider("Select Year",min(years),max(years), value=max(years))
     temp = gb.get_group(year)
 
     # plot
