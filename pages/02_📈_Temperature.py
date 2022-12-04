@@ -102,7 +102,7 @@ def animation(speed = 0.01):
     histfig,hax = plt.subplots()
     for year,temp in gb:
         hax.clear()
-        mdf = to_map_df(temp,datacol = 'avg')
+        mdf = to_map_df(temp,datacol = ['avg'])
         hist.loc[year] = mdf['avg'].mean()
         # 지도 그리기
         mapfig=getmap(mdf)
@@ -148,7 +148,7 @@ with st.container():
         e1 = st.empty()
         e2 = st.empty()
 
-        mdf = to_map_df(temp,datacol = 'avg')
+        mdf = to_map_df(temp,datacol = ['avg'])
         hist = gb.mean()['avg'].loc[:year]
         
 
