@@ -11,18 +11,19 @@ st.set_page_config(
     }
 )
 
-st.markdown('# :rotating_light: Are we really close to climate breakdown? :rotating_light:')
+st.image("./melting_earth.png", width=130)
+st.markdown('# 녹는 아이스크림, 지구맛 출시 :droplet:')
 st.markdown("This page is a Streamlit dashboard that can be used to explore the statistics about climate change in South Korea over the past 50 years.")
-st.markdown("#### General Statistics ♟")
-st.markdown("This gives a general overview of the data including temperature by day, heat wave, and tropical nights.")
-st.markdown("#### Data Sources")
+st.markdown("#### 들어가며 ♟")
+st.markdown("본 페이지는 ___를 위해 제작되었습니다.")
+st.markdown("#### 사용한 데이터")
 st.markdown('''
-        * 기상청[기상자료개방포털](https://data.kma.go.kr/stcs/grnd/grndTaList.do?pgmNo=70)
+        * 기상청 [기상자료개방포털](https://data.kma.go.kr/stcs/grnd/grndTaList.do?pgmNo=70)
         ''')
 # misc contents
 with st.container():
     st.markdown("""---""")
-    st.markdown('#### Related Contents')
+    st.markdown('#### 관련 컨텐츠')
     st.markdown('''
         If you are interested in learning more informations about climate change in South Korea here are few references that you might want to check out!
         * Documents

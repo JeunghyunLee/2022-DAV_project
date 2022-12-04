@@ -19,8 +19,7 @@ st.set_page_config(
 )
 with st.sidebar:
     region = st.selectbox("Select the City", areas)
-
-
+    
 @st.cache
 def loaddata():
     res = pd.DataFrame()
@@ -77,7 +76,7 @@ df['month'] = df['date'].dt.month
 
 # 상단 제목
 st.markdown(
-        '''### :thermometer: Temperature Overview''')
+        '''## :thermometer: 기온''')
 with st.container():
     # load all data
     res=loaddata()
@@ -85,10 +84,12 @@ with st.container():
     
     with st.container():
         # year slider
-        year = st.slider('Select Year',min(years),max(years), value=max(years))
-        st.write('Selected Year:', year)
+        year = st.slider('연도를 선택해 주세요',min(years),max(years), value=max(years))
         temp = gb.get_group(year)
-
+        
+        st.markdown(
+        ''':bulb: 아래의 Play 버튼을 눌러 연도별로 변화하는 기온을 확인할 수 있습니다.''')
+        
         # plot
         label = st.empty()
         e1 = st.empty()
@@ -114,19 +115,21 @@ with st.container():
 
 with st.container():
     st.markdown("""---""")
-    st.write('### Region Statistics of {}'.format(region))
+    st.markdown(
+        ''':bulb: 화면 좌측의 탭에서 지역을 선택해 주세요.''')
+    st.write('### {} 지역의 기온 통계'.format(region))
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
     # 선택한 지역, 연도 filter
     df_filtered = df[(df['location'] == region) ]
 
     kpi1.metric(
-        label=f"now at",
+        label=f"현재",
         value=str(year)+'년',
     )
 
     kpi2.metric(
-        label=f"Winter, Summer average temperature",
+        label=f"겨울과 여름 평균 기온",
         value=str(round(
             df_filtered[df_filtered['month'].isin([12, 1, 2])]
             ['avg'].mean()
@@ -142,7 +145,7 @@ with st.container():
     # st.write(highestyear)
 
     kpi3.metric(
-        label="Warmest year 🥵",
+        label="가장 더웠던 해 🥵",
         value= int(highestyear[0]),
         # delta= 'goes up to '+ str(round(highestyear[1], 1)),
         help = 'By average of summer max temp'
@@ -152,7 +155,7 @@ with st.container():
     lowestyear = lowestyear.sort_values(by = 'min', ascending = True)[['year', 'min']].iloc[0,:]
 
     kpi4.metric(
-        label="Coldest year 🥶",
+        label="가장 추웠던 해 🥶",
         value= int(lowestyear[0]),
         # delta= 'goes down to' + str(round(lowestyear[1], 1)),
         help = 'By average of winter min temp'
@@ -167,7 +170,7 @@ with st.container():
     densityyear.drop(labels ='year', axis = 0, inplace = True )
 
     with st.container():
-        st.markdown("### Yearly average temperature of {}".format(region))
+        st.markdown("### {} 지역의 평균 최고기온".format(region))
         fig_year = px.imshow(densityyear, color_continuous_scale='reds')
         fig_year.update_yaxes(showticklabels=False)
         fig_year.update_layout(

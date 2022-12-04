@@ -9,10 +9,10 @@ path="data_temperature/"
 rng = (0,25)
 
 st.markdown(
-        '''### :sun_with_face: Heat Waves Overview''')
+        '''## :sun_with_face: 폭염''')
 
 with st.sidebar:
-    region = st.selectbox("Select the City", areas)
+    region = st.selectbox("도시를 선택해주세요", areas)
 
 def open_df(name) :
     df = pd.read_csv(path+name + '.csv')
@@ -67,7 +67,7 @@ gb = res.groupby('year')
 
 with st.container():
     # year slider
-    year = st.slider("Select Year",min(years),max(years),value=max(years))
+    year = st.slider("연도를 선택하세요",min(years),max(years),value=max(years))
     temp = gb.get_group(year)
 
     # plot
@@ -95,10 +95,10 @@ with st.container():
 
 
 st.markdown("""---""")
-st.write('### Region Statistics of {}'.format(region))
+st.write('### {} 지역의 지역별 통계'.format(region))
 with st.container():
     # markdown text로 제목
-    st.markdown("# 지역별 폭염 일수 그래프")
+    # st.markdown("### 지역별 폭염 일수 그래프")
 
     #---------------------------------------------
 

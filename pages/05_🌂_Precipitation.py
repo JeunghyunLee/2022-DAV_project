@@ -6,7 +6,7 @@ from utilities import to_map_df, getmap, areas, years
 plt.style.use('ggplot')
 
 st.markdown(
-        '''### :umbrella_with_rain_drops: Precipitation Overview''')
+        '''## :umbrella_with_rain_drops: 강수량''')
 
 with st.sidebar:
     region = st.selectbox("Select the City", areas)
@@ -110,7 +110,7 @@ with st.container():
     st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
 
 st.markdown("""---""")
-st.write('### Region Statistics of {}'.format(region))
+st.write('### {} 지역의 강수량 통계'.format(region))
 with st.container():
     # load data and preprocessing labels
     df = raindata[raindata.location==region]
@@ -130,19 +130,19 @@ with st.container():
 
     c1,c2 = st.columns(2)
     c3,c4 = st.columns(2)
-    with c1:
-        fig,ax = standardBand(spring,color='green',r1=r1,r2=r2)
-        st.text("봄 강수량")
-        st.pyplot(fig)
-    with c2:         
-        fig,ax = standardBand(summer,color='red',r1=r1,r2=r2)
-        st.text("여름 강수량")
-        st.pyplot(fig)
-    with c3:
-        fig,ax = standardBand(fall,color='orange',r1=r1,r2=r2)
-        st.text("가을 강수량")
-        st.pyplot(fig)
-    with c4:    
-        fig,ax = standardBand(winter,color='blue',r1=r1,r2=r2)
-        st.text("겨울 강수량")
-        st.pyplot(fig)
+#    with c1:
+#        fig,ax = standardBand(spring,color='green',r1=r1,r2=r2)
+#        st.text("봄 강수량")
+#        st.pyplot(fig)
+#    with c2:
+#        fig,ax = standardBand(summer,color='red',r1=r1,r2=r2)
+#        st.text("여름 강수량")
+#        st.pyplot(fig)
+#    with c3:
+#        fig,ax = standardBand(fall,color='orange',r1=r1,r2=r2)
+#        st.text("가을 강수량")
+#        st.pyplot(fig)
+#    with c4:
+#        fig,ax = standardBand(winter,color='blue',r1=r1,r2=r2)
+#        st.text("겨울 강수량")
+#        st.pyplot(fig)

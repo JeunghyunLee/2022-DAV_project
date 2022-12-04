@@ -7,7 +7,7 @@ import altair as alt
 plt.style.use('ggplot')
 rng = (0,25)
 with st.sidebar:
-    region = st.selectbox("Select the City", areas)
+    region = st.selectbox("도시를 선택해주세요", areas)
 
 
 def plot_animation(df2):
@@ -45,7 +45,7 @@ gb = res.groupby('year')
 
 # 상단 제목
 st.markdown(
-        '''### :night_with_stars: Tropical Nights Overview''')
+        '''### :night_with_stars: 열대야''')
 
 with st.container():
     # year slider
@@ -79,7 +79,9 @@ with st.container():
 
 
 st.markdown("""---""")
-st.write('### Region Statistics of {}'.format(region))
+st.markdown(
+        ''':bulb: 화면 좌측의 탭에서 지역을 선택해 주세요.''')
+st.write('### {} 지역의 열대야 통계'.format(region))
 with st.container():
     df2 = pd.read_csv('data_tropical/total3.csv')
 
