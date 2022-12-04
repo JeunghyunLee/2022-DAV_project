@@ -6,6 +6,9 @@ import streamlit as st
 import altair as alt 
 plt.style.use('ggplot')
 rng = (0,25)
+areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
+with st.sidebar:
+    region = st.selectbox("Select the City", areas)
 
 
 def plot_animation(df2):
@@ -30,17 +33,53 @@ def animation(speed = 0.1):
         with e1:
             c1,c2 = st.columns(2)
             with c1:
-                st.plotly_chart(mapfig)
+                st.plotly_chart(mapfig, use_container_width=True)
             with c2:
                 st.pyplot(histfig)
         time.sleep(speed)
 
 
+
+# load all data
+res= pd.read_csv('data_tropical/total.csv')
+gb = res.groupby('year')
+years = list(res.year.values.astype(int))
+
+with st.container():
+    # year slider
+    year = st.slider("year",1973,2022, value=2022)
+    temp = gb.get_group(year)
+
+    # plot
+    label = st.empty()
+    e1 = st.empty()
+    e2 = st.empty()
+
+    mdf = to_map_df(temp,datacol=['data'])
+    hist = gb.sum()['data'].loc[:year]
+
+    # 지도 그리기
+    histfig,hax = plt.subplots()
+    mapfig = getmap(mdf,col='data', rng=rng)
+    hist.plot(ax = hax,color = 'black')
+
+    with label:
+        st.text(year)
+    with e1:
+        c1,c2 = st.columns(2)
+        with c1:
+            st.plotly_chart(mapfig, use_container_width=True)
+        with c2:
+            st.pyplot(histfig)
+
+    st.button("Play",on_click=animation)
+
+
+
+
 df2 = pd.read_csv('data_tropical/total3.csv')
 
 ## region_selectbox
-region_options = df2['지역'].unique().tolist()
-region = st.selectbox('Which region would you like to see?', region_options, 0)
 df2 = df2[df2['지역'] == region]
 df2.drop(['Unnamed: 0'], axis = 1, inplace = True)
 
@@ -73,40 +112,3 @@ if start_btn:
 st.markdown('#')
 st.markdown('#')
 
-
-# load all data
-res= pd.read_csv('data_tropical/total.csv')
-gb = res.groupby('year')
-years = list(res.year.values.astype(int))
-
-with st.container():
-    # year slider
-    year = st.slider("year",1973,2022, value=2022)
-    temp = gb.get_group(year)
-
-    # plot
-    label = st.empty()
-    e1 = st.empty()
-    e2 = st.empty()
-
-
-    #mdf = to_map_df(res.groupby(['year','location']).mean().reset_index(), datacol = ['avg','year'])
-    mdf = to_map_df(temp,datacol=['data'])
-    hist = gb.sum()['data'].loc[:year]
-
-    # 지도 그리기
-    histfig,hax = plt.subplots()
-    mapfig = getmap(mdf,col='data', rng=rng)
-    hist.plot(ax = hax,color = 'black')
-
-    with label:
-        st.text(year)
-    with e1:
-        c1,c2 = st.columns(2)
-        with c1:
-            st.plotly_chart(mapfig, use_container_width=True)
-        with c2:
-            st.pyplot(histfig)
-
-
-    st.button("Play",on_click=animation)

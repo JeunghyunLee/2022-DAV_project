@@ -7,6 +7,9 @@ import streamlit as st
 plt.style.use('ggplot')
 path="data_temperature/"
 rng = (0,25)
+areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
+with st.sidebar:
+    region = st.selectbox("Select the City", areas)
 
 def open_df(name) :
     df = pd.read_csv(path+name + '.csv')
@@ -45,7 +48,7 @@ def animation(speed = 0.1):
         with e1:
             c1,c2 = st.columns(2)
             with c1:
-                st.plotly_chart(mapfig)
+                st.plotly_chart(mapfig, use_container_width=True)
             with c2:
                 st.pyplot(histfig)
 
@@ -90,7 +93,7 @@ with st.container():
     with e1:
         c1,c2 = st.columns(2)
         with c1:
-            st.plotly_chart(mapfig)
+            st.plotly_chart(mapfig, use_container_width=True)
         with c2:
             st.pyplot(histfig)
 
@@ -102,13 +105,10 @@ with st.container():
 st.markdown("# 지역별 폭염 일수 그래프")
 
 #---------------------------------------------
-option = st.sidebar.selectbox(
-    '아래에서 지역을 선택하세요.',
-    ('서울경기', '강원영동', '강원영서', '충북', "충남", "경북", "경남", "전북", "전남", "제주"))
 
-st.subheader(f'{option} 지역의 평균 폭염 일수(1973년~2022년)')
+st.subheader(f'{region} 지역의 평균 폭염 일수(1973년~2022년)')
 fig = plt.figure(figsize = (35, 15))
-plt.bar(x = range(1973, 2023), height = 'data', data = res[res['location']==option])
+plt.bar(x = range(1973, 2023), height = 'data', data = res[res['location']==region])
 plt.xticks(np.arange(1973, 2023, step=1))
 plt.xlabel('Year', fontsize=18)
 plt.ylabel('Heatwave', fontsize=18)

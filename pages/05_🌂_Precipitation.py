@@ -4,11 +4,19 @@ import pandas as pd
 import time
 from utilities import to_map_df, getmap
 plt.style.use('ggplot')
+years = list(range(1974,2023,1))
+areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
+with st.sidebar:
+    region = st.selectbox("Select the City", areas)
+
+c = "rainfall"
+r1=10
+r2=10
+rng=(500,2000)
 
 
 @st.cache
 def load_rain_data():
-    areas = ['강원도','경남','경북','서울경기','전남','전북','충남','충북','제주']
     res = pd.DataFrame()
     for area in areas:
         df = pd.read_csv("data_rain/%s.csv"%area)
@@ -60,7 +68,8 @@ def rain_animation(gb, c, rng, speed=0.1):
     
         mapfig=getmap(mdf,col=c,rng=rng)
         hist.plot(ax=hax, color='blue')
-
+        with e2:
+            st.text(year)
         with e1:
             c1,c2 = st.columns(2)
             with c1:
@@ -68,20 +77,11 @@ def rain_animation(gb, c, rng, speed=0.1):
             with c2:
                 st.text("도별 표준편차")
                 st.pyplot(histfig)
-        with e2:
-            st.text(year)
         time.sleep(speed)
 
 
 if __name__=='__main__':
     raindata = load_rain_data()
-    years = list(range(1974,2023,1))
-    areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
-
-    c = "rainfall"
-    r1=10
-    r2=10
-    rng=(500,2000)
 
     # Animation
     aggregate = raindata.groupby(['year','location']).sum()[[c]].reset_index()
@@ -97,6 +97,9 @@ if __name__=='__main__':
         
         mapfig=getmap(mdf,col=c,rng=rng)
         hist.plot(ax=hax,color='blue')
+        with e2:
+            st.text(year)
+
         with e1:
             c1,c2 = st.columns(2)
             with c1:
@@ -104,16 +107,12 @@ if __name__=='__main__':
             with c2:
                 st.text("도별 표준편차")
                 st.pyplot(histfig)
-        with e2:
-            st.text(year)
         st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
 
     # 지역별
     with st.container():
-        area = st.selectbox("지역",areas)
-
         # load data and preprocessing labels
-        df = raindata[raindata.location==area]
+        df = raindata[raindata.location==region]
         seasonal = df.groupby(['year','season']).sum()[c].loc[years[1]:years[-1]]
         spring = seasonal.loc[:,1]
         summer = seasonal.loc[:,2]

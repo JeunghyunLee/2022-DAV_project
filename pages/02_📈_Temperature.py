@@ -6,8 +6,6 @@ import time
 import streamlit as st
 import plotly.express as px
 from streamlit_player import st_player
-
-
 st.set_page_config(
     page_title= 'Temperature', 
     page_icon = ':sunny:',
@@ -19,44 +17,15 @@ st.set_page_config(
         'About': "# 2022 winter Data Sciencen and Visualization project. Contributors:  "
     }
 )
-
-# Load files
+rng=(0,20)
 path = 'data_temperature/'
-names = ['강원영동', '강원영서', '경남', '경북',
-        '서울경기', '전남', '전북', '제주', '충남', '충북']
-
-df = pd.DataFrame()
-for name in names :
-    temp = pd.read_csv(path +str(name) + '.csv')
-    temp['지역'] = name
-    df = pd.concat([df, temp], axis = 0)
-
-df = df.dropna()
-df['monthday'] = df['date'].apply(lambda x: x[-5:])
-df['date'] = df['date'].apply(lambda x: x[1:])
-df['date'] = pd.to_datetime(df['date'], format = '%Y-%m-%d')
-df['year'] = df['date'].dt.year
-df['month'] = df['date'].dt.month
-df['day'] = df['date'].dt.day
-# df = df[df['year']!= 2022]
-
-# 상단 제목
-st.markdown(
-        '''### :thermometer: Temperature''')
-
-# 사이드바
+areas =["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주"]
 with st.sidebar:
-    region_filter = st.selectbox("Select the City", pd.unique(df["지역"]))
-    # year_region = st.slider(
-    #     'Select Year',
-    #     1973, 2022, (1980))
-    # st.write('Selected Year for regional statistics:', year_region)
+    region_filter = st.selectbox("Select the City", areas)
 
-st.write('### Geographical Statistics')
 
 @st.cache
 def loaddata():
-    areas = ['강원영동','강원영서','경남','경북','서울경기','전남','전북','충남','충북','제주']
     res = pd.DataFrame()
     for area in areas:
         df = pd.read_csv(path + "%s.csv"%area)
@@ -69,8 +38,6 @@ def loaddata():
     res=res.reset_index()
     return res
 
-
-
 def animation(speed = 0.01):
     hist = pd.Series()
     histfig,hax = plt.subplots()
@@ -79,7 +46,7 @@ def animation(speed = 0.01):
         mdf = to_map_df(temp,datacol = ['avg'])
         hist.loc[year] = mdf['avg'].mean()
         # 지도 그리기
-        mapfig=getmap(mdf, col='avg',rng=(9,20))
+        mapfig=getmap(mdf, col='avg',rng=rng)
         hist.plot(ax = hax, color='black')
         
         with label:
@@ -95,6 +62,27 @@ def animation(speed = 0.01):
                 plt.title("Average Temperature")
                 st.pyplot(histfig)
         time.sleep(speed)
+
+
+
+# Load files
+df = pd.DataFrame()
+for name in areas :
+    temp = pd.read_csv(path +str(name) + '.csv')
+    temp['지역'] = name
+    df = pd.concat([df, temp], axis = 0)
+
+df = df.dropna()
+df['date'] = df['date'].apply(lambda x: pd.Timestamp(x.strip()))
+df['year'] = df['date'].dt.year
+df['month'] = df['date'].dt.month
+
+# 상단 제목
+st.markdown(
+        '''### :thermometer: Temperature''')
+
+st.write('### Geographical Statistics')
+
 
 with st.container():
     # load all data
@@ -112,44 +100,25 @@ with st.container():
         # plot
         label = st.empty()
         e1 = st.empty()
-        e2 = st.empty()
 
         mdf = to_map_df(temp,datacol = ['avg'])
         hist = gb.mean()['avg'].loc[:year]
         
-
         # 지도 그리기
         histfig,hax = plt.subplots()
-        
-
         with label:
             st.text(year)
-        with e1.container():
+        with e1:
             c1,c2 = st.columns(2)
             with c1:
-                mapfig = getmap(mdf, col='avg',rng=(9,20))
+                mapfig = getmap(mdf, col='avg',rng=rng)
                 st.plotly_chart(mapfig, use_container_width = True)
-                
             with c2:
                 hist.plot(ax = hax,color = 'black')
                 plt.title("Average Temperature")
                 st.pyplot(histfig)
-                
-    
         button = st.button("Play",on_click=animation)
-        with label:
-            st.text(year)
-            # year = 2022
-        with e1.container():
-            c1,c2 = st.columns(2)
-            with c1:
-                mapfig = getmap(mdf, col='avg',rng=(9,20))
-                st.plotly_chart(mapfig, use_container_width = True)
-                
-            with c2:
-                hist.plot(ax = hax,color = 'black')
-                plt.title("Average Temperature")
-                st.pyplot(histfig)
+
 
 st.markdown("""---""")
 st.write('### Region Statistics _ {}'.format(region_filter))
