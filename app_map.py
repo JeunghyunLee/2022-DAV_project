@@ -84,12 +84,9 @@ if __name__ == "__main__":
 
     # load geojson
     geojson = json.load(open('korea_geojson2.geojson',encoding='utf-8'))
-    ids=[]
     for x in geojson['features']:
         id = x['properties']['CTP_KOR_NM']
         x['id'] = id
-        ids.append(id)
-    ids = list(set(ids))
 
 
     with st.container():
