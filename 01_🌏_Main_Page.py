@@ -16,7 +16,7 @@ st.markdown("#### General Statistics ♟")
 st.markdown("This gives a general overview of the data including temperature by day, heat wave, and tropical nights.")
 st.markdown("#### Data Sources")
 st.markdown('''
-        * 기상청 기상자료개방포털
+        * [기상청 기상자료개방포털](https://data.kma.go.kr/stcs/grnd/grndTaList.do?pgmNo=70)
             * link: https://data.kma.go.kr/stcs/grnd/grndTaList.do?pgmNo=70
         * ''')
 # misc contents
