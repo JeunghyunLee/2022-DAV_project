@@ -27,7 +27,7 @@ def to_map_df(df,idcol='location',datacol=['data']):
                 res.loc[len(res)] = [item]+values
     return res
 
-def loadGeo(fn='SIDO_MAP_2022_revised.json'):
+def loadGeo(fn='korea_sido.json'):
     geojson = json.load(open(fn,encoding='utf-8'))
     for x in geojson['features']:
         id = x['properties']['CTP_KOR_NM']
