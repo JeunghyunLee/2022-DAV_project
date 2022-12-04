@@ -1,6 +1,5 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-
 import pandas as pd
 import time
 from utilities import to_map_df, getmap

@@ -5,15 +5,8 @@ import matplotlib.pyplot as plt
 import time
 import streamlit as st
 import plotly.express as px
-from streamlit_option_menu import option_menu
-# pip install streamlit-player
 from streamlit_player import st_player
 
-import pydeck as pdk
-from urllib.error import URLError
-
-import plotly.figure_factory as ff
-import plotly.graph_objects as go
 
 st.set_page_config(
     page_title= 'Temperature', 
