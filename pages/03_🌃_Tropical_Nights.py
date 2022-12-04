@@ -90,25 +90,20 @@ with st.container():
     df2.drop(['Unnamed: 0'], axis = 1, inplace = True)
 
     ## line_chart animation
-    lines = alt.Chart(df2).mark_line().encode(
-        x=alt.X('연도', title='연도'),
-        y=alt.Y('연합계', title='연합계'),
-        color = '지역'
-        ).properties(width=600,height=450)
+    fig = px.line(df2, x='연도', y='연합계', color='지역')
+    fig.show()
 
 
     N = df2.shape[0] # number of elements in the dataframe
     burst = 6       # number of elements (months) to add to the plot
     size = burst     # size of the current dataset
 
-    line_plot = st.altair_chart(lines)
     start_btn = st.button('Start')
 
     if start_btn:
         for i in range(1,N):
             step_df2 = df2.iloc[0:size]
             lines = plot_animation(step_df2)
-            line_plot = line_plot.altair_chart(lines)
             size = i + burst
             if size >= N: 
                 size = N - 1
