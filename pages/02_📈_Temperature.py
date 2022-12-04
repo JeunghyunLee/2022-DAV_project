@@ -14,8 +14,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        # 'Get Help': 'https://www.extremelycoolapp.com/help',
-        # 'Report a bug': "https://www.extremelycoolapp.com/bug",
         'About': "# 2022 winter Data Sciencen and Visualization project. Contributors:  "
     }
 )
@@ -88,6 +86,7 @@ with st.container():
     with st.container():
         # year slider
         year = st.slider('Select Year',min(years),max(years), value=max(years))
+        st.write('Selected Year:', year)
         temp = gb.get_group(year)
 
         # plot
