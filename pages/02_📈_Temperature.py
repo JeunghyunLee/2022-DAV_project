@@ -21,7 +21,7 @@ st.set_page_config(
     }
 )
 with st.sidebar:
-    region_filter = st.selectbox("Select the City", areas)
+    region = st.selectbox("Select the City", areas)
 
 
 @st.cache
@@ -114,13 +114,13 @@ with st.container():
 
 
 st.markdown("""---""")
-st.write('### Region Statistics _ {}'.format(region_filter))
+st.write('### Region Statistics _ {}'.format(region))
 with st.container():
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
     # 선택한 지역, 연도 filter
-    df_filtered = df[(df['지역'] == region_filter) ]
-    df_filtered_cityonly = df[(df['지역'] == region_filter)]
+    df_filtered = df[(df['지역'] == region) ]
+    df_filtered_cityonly = df[(df['지역'] == region)]
 
     kpi1.metric(
         label=f"now at",
@@ -169,7 +169,7 @@ with st.container():
     densityyear.drop(labels ='year', axis = 0, inplace = True )
 
     with st.container():
-        st.markdown("### Yearly average temperature _ {}".format(region_filter))
+        st.markdown("### Yearly average temperature _ {}".format(region))
         fig_year = px.imshow(densityyear, color_continuous_scale='reds')
         fig_year.update_yaxes(showticklabels=False)
         fig_year.update_layout(

@@ -78,67 +78,67 @@ def rain_animation(gb, c, rng, speed=0.1):
         time.sleep(speed)
 
 
-if __name__=='__main__':
-    raindata = load_rain_data()
+raindata = load_rain_data()
 
-    # Animation
-    aggregate = raindata.groupby(['year','location']).sum()[[c]].reset_index()
-    histfig,hax = plt.subplots()
-    gb = aggregate.groupby('year')
-    with st.container():
-        year = st.slider("Select Year",min(years),max(years),value=max(years))
-        e1 = st.empty()
-        e2 = st.empty()
-        temp = gb.get_group(year)    
-        mdf = to_map_df(temp, datacol=[c])
-        hist = gb.std()[c].loc[:year]
-        
-        mapfig=getmap(mdf,col=c,rng=rng)
-        hist.plot(ax=hax,color='blue')
-        with e1:
-            st.text(year)
-        with e2:
-            c1,c2 = st.columns(2)
-            with c1:
-                st.plotly_chart(mapfig,use_container_width=True)
-            with c2:
-                st.text("도별 표준편차")
-                st.pyplot(histfig)
-        st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
-
-    # 지역별
-    with st.container():
-        # load data and preprocessing labels
-        df = raindata[raindata.location==region]
-        seasonal = df.groupby(['year','season']).sum()[c].loc[years[1]:years[-1]]
-        spring = seasonal.loc[:,1]
-        summer = seasonal.loc[:,2]
-        fall = seasonal.loc[:,3]
-        winter = seasonal.loc[:,4]
-
-
-        fig,ax = plt.subplots()
-        spring.plot(kind='bar',ax=ax,color='green')
-        summer.plot(kind='bar',ax=ax,bottom=spring,color='red')
-        fall.plot(kind='bar',ax=ax,bottom=spring+summer,color='orange')
-        winter.plot(kind='bar',ax=ax,bottom=spring+summer+fall,color='blue')        
-        st.pyplot(fig)
-
+# Animation
+aggregate = raindata.groupby(['year','location']).sum()[[c]].reset_index()
+histfig,hax = plt.subplots()
+gb = aggregate.groupby('year')
+with st.container():
+    year = st.slider("Select Year",min(years),max(years),value=max(years))
+    e1 = st.empty()
+    e2 = st.empty()
+    temp = gb.get_group(year)    
+    mdf = to_map_df(temp, datacol=[c])
+    hist = gb.std()[c].loc[:year]
+    
+    mapfig=getmap(mdf,col=c,rng=rng)
+    hist.plot(ax=hax,color='blue')
+    with e1:
+        st.text(year)
+    with e2:
         c1,c2 = st.columns(2)
-        c3,c4 = st.columns(2)
         with c1:
-            fig,ax = standardBand(spring,color='green',r1=r1,r2=r2)
-            st.text("봄 강수량")
-            st.pyplot(fig)
-        with c2:         
-            fig,ax = standardBand(summer,color='red',r1=r1,r2=r2)
-            st.text("여름 강수량")
-            st.pyplot(fig)
-        with c3:
-            fig,ax = standardBand(fall,color='orange',r1=r1,r2=r2)
-            st.text("가을 강수량")
-            st.pyplot(fig)
-        with c4:    
-            fig,ax = standardBand(winter,color='blue',r1=r1,r2=r2)
-            st.text("겨울 강수량")
-            st.pyplot(fig)
+            st.plotly_chart(mapfig,use_container_width=True)
+        with c2:
+            st.text("도별 표준편차")
+            st.pyplot(histfig)
+    st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
+
+st.markdown("""---""")
+st.write('### Region Statistics _ {}'.format(region))
+with st.container():
+    # load data and preprocessing labels
+    df = raindata[raindata.location==region]
+    seasonal = df.groupby(['year','season']).sum()[c].loc[years[1]:years[-1]]
+    spring = seasonal.loc[:,1]
+    summer = seasonal.loc[:,2]
+    fall = seasonal.loc[:,3]
+    winter = seasonal.loc[:,4]
+
+
+    fig,ax = plt.subplots()
+    spring.plot(kind='bar',ax=ax,color='green')
+    summer.plot(kind='bar',ax=ax,bottom=spring,color='red')
+    fall.plot(kind='bar',ax=ax,bottom=spring+summer,color='orange')
+    winter.plot(kind='bar',ax=ax,bottom=spring+summer+fall,color='blue')        
+    st.pyplot(fig)
+
+    c1,c2 = st.columns(2)
+    c3,c4 = st.columns(2)
+    with c1:
+        fig,ax = standardBand(spring,color='green',r1=r1,r2=r2)
+        st.text("봄 강수량")
+        st.pyplot(fig)
+    with c2:         
+        fig,ax = standardBand(summer,color='red',r1=r1,r2=r2)
+        st.text("여름 강수량")
+        st.pyplot(fig)
+    with c3:
+        fig,ax = standardBand(fall,color='orange',r1=r1,r2=r2)
+        st.text("가을 강수량")
+        st.pyplot(fig)
+    with c4:    
+        fig,ax = standardBand(winter,color='blue',r1=r1,r2=r2)
+        st.text("겨울 강수량")
+        st.pyplot(fig)

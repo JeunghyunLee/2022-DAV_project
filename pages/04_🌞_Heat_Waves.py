@@ -56,13 +56,7 @@ def animation(speed = 0.1):
 
 #--------------------------------------------------
 
-# Home을 제외한 Stats 선택시 페이지 최상단에 나오는 제목
-st.markdown(
-    '''
-<h1 style='text-align: center;
-color: grey;'
-> Heatwave''', unsafe_allow_html=True)
-# if __name__ == "__main__":
+
 # load all data
 res= loaddata()
 gb = res.groupby('year')
@@ -96,17 +90,19 @@ with st.container():
     st.button("Play",on_click=animation)
 
 
+st.markdown("""---""")
+st.write('### Region Statistics _ {}'.format(region))
+with st.container():
+    # markdown text로 제목
+    st.markdown("# 지역별 폭염 일수 그래프")
 
-# markdown text로 제목
-st.markdown("# 지역별 폭염 일수 그래프")
+    #---------------------------------------------
 
-#---------------------------------------------
-
-st.subheader(f'{region} 지역의 평균 폭염 일수(1973년~2022년)')
-fig = plt.figure(figsize = (35, 15))
-plt.bar(x = range(1973, 2023), height = 'data', data = res[res['location']==region])
-plt.xticks(np.arange(1973, 2023, step=1))
-plt.xlabel('Year', fontsize=18)
-plt.ylabel('Heatwave', fontsize=18)
-# plt.show()
-st.pyplot(fig)
+    st.subheader(f'{region} 지역의 평균 폭염 일수(1973년~2022년)')
+    fig = plt.figure(figsize = (35, 15))
+    plt.bar(x = range(1973, 2023), height = 'data', data = res[res['location']==region])
+    plt.xticks(np.arange(1973, 2023, step=1))
+    plt.xlabel('Year', fontsize=18)
+    plt.ylabel('Heatwave', fontsize=18)
+    # plt.show()
+    st.pyplot(fig)
