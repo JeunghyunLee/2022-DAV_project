@@ -39,7 +39,7 @@ with st.sidebar:
     )
 
 # Data Frame
-path = '/Users/nayeonlee/Documents/GitHub/2022-DAV_project/data_temperature/'
+path = 'data_temperature/'
 names = ['강원영동', '강원영서', '경남', '경북',
         '서울경기', '전남', '전북', '제주', '충남', '충북']
 
