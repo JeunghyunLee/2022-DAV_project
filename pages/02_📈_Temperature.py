@@ -77,7 +77,7 @@ df['month'] = df['date'].dt.month
 
 # 상단 제목
 st.markdown(
-        '''### :thermometer: Temperature''')
+        '''### :thermometer: Temperature Overview''')
 with st.container():
     # load all data
     res=loaddata()
@@ -114,7 +114,7 @@ with st.container():
 
 with st.container():
     st.markdown("""---""")
-    st.write('### Region Statistics _ {}'.format(region))
+    st.write('### Region Statistics of {}'.format(region))
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
     # 선택한 지역, 연도 filter
@@ -167,7 +167,7 @@ with st.container():
     densityyear.drop(labels ='year', axis = 0, inplace = True )
 
     with st.container():
-        st.markdown("### Yearly average temperature _ {}".format(region))
+        st.markdown("### Yearly average temperature of {}".format(region))
         fig_year = px.imshow(densityyear, color_continuous_scale='reds')
         fig_year.update_yaxes(showticklabels=False)
         fig_year.update_layout(

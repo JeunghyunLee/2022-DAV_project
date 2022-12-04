@@ -43,6 +43,10 @@ def animation(speed = 0.1):
 res= pd.read_csv('data_tropical/total.csv')
 gb = res.groupby('year')
 
+# 상단 제목
+st.markdown(
+        '''### :night_with_stars: Tropical Nights Overview''')
+
 with st.container():
     # year slider
     year = st.slider("Select Year",min(years),max(years), value=max(years))
@@ -75,7 +79,7 @@ with st.container():
 
 
 st.markdown("""---""")
-st.write('### Region Statistics _ {}'.format(region))
+st.write('### Region Statistics of {}'.format(region))
 with st.container():
     df2 = pd.read_csv('data_tropical/total3.csv')
 

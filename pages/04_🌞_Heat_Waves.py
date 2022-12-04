@@ -7,6 +7,10 @@ import streamlit as st
 plt.style.use('ggplot')
 path="data_temperature/"
 rng = (0,25)
+
+st.markdown(
+        '''### :sun_with_face: Heat Waves Overview''')
+
 with st.sidebar:
     region = st.selectbox("Select the City", areas)
 
@@ -91,7 +95,7 @@ with st.container():
 
 
 st.markdown("""---""")
-st.write('### Region Statistics _ {}'.format(region))
+st.write('### Region Statistics of {}'.format(region))
 with st.container():
     # markdown text로 제목
     st.markdown("# 지역별 폭염 일수 그래프")

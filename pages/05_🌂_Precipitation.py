@@ -4,6 +4,10 @@ import pandas as pd
 import time
 from utilities import to_map_df, getmap, areas, years
 plt.style.use('ggplot')
+
+st.markdown(
+        '''### :umbrella_with_rain_drops: Precipitation Overview''')
+
 with st.sidebar:
     region = st.selectbox("Select the City", areas)
 
@@ -106,7 +110,7 @@ with st.container():
     st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
 
 st.markdown("""---""")
-st.write('### Region Statistics _ {}'.format(region))
+st.write('### Region Statistics of {}'.format(region))
 with st.container():
     # load data and preprocessing labels
     df = raindata[raindata.location==region]
