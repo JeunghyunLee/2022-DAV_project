@@ -1,134 +1,62 @@
-
 import pandas as pd
-import numpy as np
-import datetime
-import time
-from utilities import to_map_df
 import matplotlib.pyplot as plt
-import time, json, datetime
-
-import streamlit as st
-import seaborn as sns
 import plotly.express as px
-from streamlit_option_menu import option_menu
-# pip install streamlit-player
-from streamlit_player import st_player
+from utilities import to_map_df
+import time, json
+import streamlit as st
+import altair as alt 
 
-import pydeck as pdk
-from urllib.error import URLError
+plt.style.use('ggplot')
 
-import plotly.figure_factory as ff
-import plotly.graph_objects as go
+df2 = pd.read_csv('total3.csv')
 
-st.set_page_config(
-    page_title= 'Korea Climate change Data', 
-    page_icon = ':sunny:',
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        # 'Get Help': 'https://www.extremelycoolapp.com/help',
-        # 'Report a bug': "https://www.extremelycoolapp.com/bug",
-        'About': "# 2022 winter Data Sciencen and Visualization project. Contributors:  "
-    }
+## region_selectbox
+region_options = df2['지역'].unique().tolist()
+region = st.selectbox('Which region would you like to see?', region_options, 0)
+df2 = df2[df2['지역'] == region]
+df2.drop(['Unnamed: 0'], axis = 1, inplace = True)
+
+## line_chart animation
+lines = alt.Chart(df2).mark_line().encode(
+    x=alt.X('연도', title='연도'),
+    y=alt.Y('연합계', title='연합계'),
+    color = '지역'
+).properties(
+    width=600,
+    height=450
 )
 
-# Data Frame
-path = 'data_temperature/'
-names = ['강원영동', '강원영서', '경남', '경북',
-        '서울경기', '전남', '전북', '제주', '충남', '충북']
-
-
-tropical = pd.read_csv('total.csv')
-
-# 가운데 정렬 - 소제목 설정
-st.markdown(
-        '''
-    <h3 style=
-    '
-    text-align: center;
-    color: green;
-    font-family:apple;
-    ' > Tropical Nights''', unsafe_allow_html=True)
-
-# markdown text로 제목 
-st.markdown("# 열대야일수")
-
-
-# 펼쳐지는 페이지 설정 
-with st.expander("See explanation"):
-        st.write("""
-        열대야일수는 밤최저기온이 25 ℃ 이상인 날로 정의합니다. 기온이 밤에도 25 ℃ 이하로 내려가지 않을 때에는 너무 더워서 사람이 잠들기 어렵기 때문에 더위를 나타내는 지표로 열대야를 사용합니다.
-    """)
-        st.image("https://t3.ftcdn.net/jpg/02/56/12/92/360_F_256129231_RHUe7uAQGPxUmUnFAtaB5pzYhPNCLCed.jpg")
-    
-filter1, filter2 = st.columns(2)
-
-# 페이지 내에서 지역 multi select
-with filter1 :
-        region_filter = st.selectbox(
-        "Choose regions", tropical['location'].unique().tolist(), 
-    )
-        
-# 페이지 내에서 year 선택
-with filter2 :
-    year_slider = st.slider(
-            'Select Year',
-            1973, 2021, (1980))
-
-# 사이드 바에서 지역 multiselect/year 설택
-# with st.sidebar:
-#     region_filter = st.selectbox("Select the City", pd.unique(df["지역"]))
-#     year_slider = st.slider(
-#         'Select Year',
-#         1973, 2021, (1980))
-#     st.write('Selected Year:', year_slider)
-
-
-# 데이터 정보 요약 표현 가능한 metrics
-
-st.write('### Region Statistics')
-tropical_filtered = tropical[(tropical['location'] == region_filter) & (tropical['year'] == year_slider)]
-tropical_filtered_cityonly = tropical[(tropical['location'] == region_filter)]
-
-kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-
-kpi1.metric(
-    label=f"You are now at",
-    value=region_filter,
+@st.cache
+def plot_animation(df2):
+    lines = alt.Chart(df2).mark_line().encode(
+       x=alt.X('연도', axis=alt.Axis(title='연도')),
+       y=alt.Y('연합계',axis=alt.Axis(title='연합계')),
+     ).properties(
+    width=600,
+    height=450
 )
-kpi2.metric(
-    label=f"Average number of tropical nights⏳",
-    value=round(
-        tropical_filtered['data'].mean()
-        ),
-    # delta=round(df_filtered['avg'].mean()) - 10,
-)
+    return lines
 
 
-lowestyear = tropical_filtered_cityonly.sort_values(by = 'data', ascending = True)[['year', 'data']].iloc[0,:]
+N = df2.shape[0] # number of elements in the dataframe
+burst = 6       # number of elements (months) to add to the plot
+size = burst     # size of the current dataset
+
+line_plot = st.altair_chart(lines)
+start_btn = st.button('Start')
+
+if start_btn:
+   for i in range(1,N):
+      step_df2 = df2.iloc[0:size]
+      lines = plot_animation(step_df2)
+      line_plot = line_plot.altair_chart(lines)
+      size = i + burst
+      if size >= N: 
+         size = N - 1
+      time.sleep(0.1)
 
 
-kpi3.metric(
-    label="Coldest year 🥶",
-    value= lowestyear[0],
-    delta= 'num: '+ str(round(lowestyear[1], 1)),
-    help = 'Year of lowest number of tropical nights'
-)
-
-
-highestyear = tropical_filtered_cityonly.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
-
-# st.write(highestyear)
-
-kpi4.metric(
-    label="Warmest year 🥵",
-    value= highestyear[0],
-    delta= 'num: '+ str(round(highestyear[1], 1)),
-    help = 'Year of highest number of tropical nights'
-)
-
-
-# map
+st.markdown('#')
 st.markdown('#')
 
 
