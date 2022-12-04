@@ -7,7 +7,7 @@ import altair as alt
 plt.style.use('ggplot')
 rng = (0,40)
 
-df2 = pd.read_csv('total3.csv')
+df2 = pd.read_csv('data_tropical/total3.csv')
 
 ## region_selectbox
 region_options = df2['지역'].unique().tolist()
@@ -78,7 +78,7 @@ def animation(speed = 0.1):
                 st.pyplot(histfig)
         time.sleep(speed)
 
-df = pd.read_csv('total.csv')
+df = pd.read_csv('data_tropical/total.csv')
 
 if __name__ == "__main__":
     # load all data
