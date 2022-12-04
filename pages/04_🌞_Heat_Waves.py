@@ -6,7 +6,7 @@ import time
 import streamlit as st
 plt.style.use('ggplot')
 path="data_temperature/"
-rng = (0,30)
+rng = (0,25)
 
 def open_df(name) :
     df = pd.read_csv(path+name + '.csv')
@@ -70,7 +70,7 @@ years = list(res.year.values.astype(int))
 
 with st.container():
     # year slider
-    year = st.slider("year",1973,2022)
+    year = st.slider("year",1973,2022,value=2022)
     temp = gb.get_group(year)
 
     # plot
