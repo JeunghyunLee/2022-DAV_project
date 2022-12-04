@@ -90,14 +90,15 @@ with st.container():
     df2.drop(['Unnamed: 0'], axis = 1, inplace = True)
 
     ## line_chart animation
-    fig = px.line(df2, x='연도', y='연합계', color='지역')
-    fig.show()
+    fig2 = px.line(df2, x='연도', y='연합계', color='지역')
 
 
     N = df2.shape[0] # number of elements in the dataframe
     burst = 6       # number of elements (months) to add to the plot
     size = burst     # size of the current dataset
 
+    
+    st.plotly_chart(fig2, use_container_width=True)
     start_btn = st.button('Start')
 
     if start_btn:
