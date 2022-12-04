@@ -26,7 +26,6 @@ lines = alt.Chart(df2).mark_line().encode(
     height=450
 )
 
-@st.cache
 def plot_animation(df2):
     lines = alt.Chart(df2).mark_line().encode(
        x=alt.X('연도', axis=alt.Axis(title='연도')),
