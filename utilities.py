@@ -1,4 +1,7 @@
 import pandas as pd
+import json
+import plotly.express as px
+
 
 mapping={
     '강원도':['강원도'],
@@ -24,3 +27,26 @@ def to_map_df(df,idcol='location',datacol=['data']):
                 res.loc[len(res)] = [item]+values
     return res
 
+def loadGeo(fn='SIDO_MAP_2022_revised.json'):
+    geojson = json.load(open(fn,encoding='utf-8'))
+    for x in geojson['features']:
+        id = x['properties']['CTP_KOR_NM']
+        x['id'] = id
+    return geojson
+
+
+def getmap(data,col='avg',loc='location',rng=(9,20)):
+    geojson=loadGeo()
+    fig=px.choropleth_mapbox(data,
+        geojson=geojson,
+        locations=loc,
+        color = col,
+        mapbox_style='carto-positron',
+        color_continuous_scale=[(0, "blue"), (1, "red")],
+        range_color=rng,
+        center = {'lat':35.757981,'lon':127.661132},
+        zoom=5.5,
+        labels='data',
+    )
+    fig.update_layout(margin={"r":0,"l":0,"t":0,"b":0})
+    return fig

@@ -1,13 +1,9 @@
 import pandas as pd
-import numpy as np
-import datetime
 import time
-from utilities import to_map_df
+from utilities import to_map_df, getmap
 import matplotlib.pyplot as plt
-import time, json, datetime
-
+import time
 import streamlit as st
-import seaborn as sns
 import plotly.express as px
 from streamlit_option_menu import option_menu
 # pip install streamlit-player
@@ -80,22 +76,7 @@ def loaddata():
     res=res.reset_index()
     return res
 
-def getmap(data,col='avg'):
-    fig=px.choropleth_mapbox(data,
-        geojson=geojson,
-        locations='location',
-        color = col,
-        mapbox_style='carto-positron',
-        color_continuous_scale=[(0, "blue"), (1, "red")],
-        range_color=[9,20],
-        # animation_frame='year',
-        center = {'lat':35.757981,'lon':127.661132},
-        zoom=5.5,
-        opacity = .8, 
-        labels='data'
-    )
-    fig.update_layout(margin={"r":0,"l":0,"t":0,"b":0})
-    return fig
+
 
 def animation(speed = 0.01):
     hist = pd.Series()
@@ -105,7 +86,7 @@ def animation(speed = 0.01):
         mdf = to_map_df(temp,datacol = ['avg'])
         hist.loc[year] = mdf['avg'].mean()
         # 지도 그리기
-        mapfig=getmap(mdf)
+        mapfig=getmap(mdf, col='avg',rng=(9,20))
         hist.plot(ax = hax, color='black')
         
         with label:
@@ -114,7 +95,7 @@ def animation(speed = 0.01):
         with e1:
             c1,c2 = st.columns(2)
             with c1:
-                mapfig=getmap(mdf)
+                mapfig=getmap(mdf,col='avg',rng=(9,20))
                 st.plotly_chart(mapfig, use_container_width = True)
             with c2:
                 hist.plot(ax = hax, color='black')
@@ -128,14 +109,6 @@ with st.container():
     gb = res.groupby('year')
     years = list(res.year.values.astype(int))
 
-    # load geojson
-    geojson = json.load(open('SIDO_MAP_2022_revised.json',encoding='utf-8'))
-    ids=[]
-    for x in geojson['features']:
-        id = x['properties']['CTP_KOR_NM']
-        x['id'] = id
-        ids.append(id)
-    ids = list(set(ids))
 
     with st.container():
         # year slider
@@ -161,7 +134,7 @@ with st.container():
         with e1.container():
             c1,c2 = st.columns(2)
             with c1:
-                mapfig = getmap(mdf, col='avg')
+                mapfig = getmap(mdf, col='avg',rng=(9,20))
                 st.plotly_chart(mapfig, use_container_width = True)
                 
             with c2:
@@ -177,7 +150,7 @@ with st.container():
         with e1.container():
             c1,c2 = st.columns(2)
             with c1:
-                mapfig = getmap(mdf, col='avg')
+                mapfig = getmap(mdf, col='avg',rng=(9,20))
                 st.plotly_chart(mapfig, use_container_width = True)
                 
             with c2:

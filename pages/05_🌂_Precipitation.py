@@ -1,23 +1,10 @@
 import streamlit as st
 import matplotlib.pyplot as plt
-import plotly.express as px
+
 import pandas as pd
 import time
-import json
-from utilities import to_map_df
-import folium
-from folium.plugins import HeatMap
-from streamlit_folium import st_folium
+from utilities import to_map_df, getmap
 plt.style.use('ggplot')
-
-@st.cache
-def loadGeo():
-    geojson = json.load(open('korea_geojson2.geojson',encoding='utf-8'))
-    for x in geojson['features']:
-        id = x['properties']['CTP_KOR_NM']
-        x['id'] = id
-    return geojson
-
 
 
 @st.cache
@@ -40,20 +27,6 @@ def load_rain_data():
     return res
 
 
-def getmap(data,col='avg',loc='location',rng=(9,20)):
-    fig=px.choropleth_mapbox(data,
-        geojson=geojson,
-        locations=loc,
-        color = col,
-        mapbox_style='carto-positron',
-        color_continuous_scale=[(0, "blue"), (1, "red")],
-        range_color=rng,
-        center = {'lat':35.757981,'lon':127.661132},
-        zoom=5.5,
-        labels='data',
-    )
-    fig.update_layout(margin={"r":0,"l":0,"t":0,"b":0})
-    return fig
 
 def getStandardBand(data,r1,r2):
     standard = data.rolling(r1).mean().shift(-1).fillna(method='ffill')
@@ -103,7 +76,6 @@ def rain_animation(gb, c, rng, speed=0.1):
 
 if __name__=='__main__':
     raindata = load_rain_data()
-    geojson=loadGeo()
     years = list(range(1974,2023,1))
     areas = ["서울경기","강원도","경남","경북","전남","전북","충남","충북","제주","전국"]
 
