@@ -94,6 +94,47 @@ with st.container():
 
     st.button("Play",on_click=animation)
 
+st.markdown("""---""")
+st.write('### {} 지역의 폭염 통계'.format(region))
+with st.container():
+
+    df = res[res['location'] == region]
+
+    # 데이터 정보 요약 표현 가능한 metrics
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+    kpi1.metric(
+        label=f"now at",
+        value="%d년"%max(years),
+    )
+    kpi2.metric(
+        label=f"폭염 평균 일수",
+        value=round(
+            df['data'].mean()
+        ),
+        # delta=round(df_filtered['avg'].mean()) - 10,
+    )
+
+
+    lowestyear = df.sort_values(by = 'data', ascending = True)[['year', 'data']].iloc[0,:]
+
+
+    # kpi3.metric(
+    #     label="가장 적었던 해 🥶",
+    #     value= lowestyear[0],
+    #     delta= 'num: '+ str(round(lowestyear[1], 1)),
+    # )
+
+
+    highestyear = df.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
+
+    # st.write(highestyear)
+
+    kpi3.metric(
+        label="가장 많았던 해🥵",
+        value= highestyear[0],
+        delta= 'num: '+ str(round(highestyear[1], 1)),
+
+    )
 
 st.markdown("""---""")
 st.write('### {} 지역의 지역별 통계'.format(region))
