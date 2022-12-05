@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
+import plotly.express as px
 from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
@@ -97,16 +98,7 @@ with st.container():
 st.markdown("""---""")
 st.write('### {} 지역의 지역별 통계'.format(region))
 with st.container():
-    # markdown text로 제목
-    # st.markdown("### 지역별 폭염 일수 그래프")
-
-    #---------------------------------------------
-
     st.subheader(f'{region} 지역의 평균 폭염 일수(1973년~2022년)')
-    fig = plt.figure(figsize = (35, 15))
-    plt.bar(x = range(1973, 2023), height = 'data', data = res[res['location']==region])
-    plt.xticks(np.arange(1973, 2023, step=1))
-    plt.xlabel('Year', fontsize=18)
-    plt.ylabel('Heatwave', fontsize=18)
-    # plt.show()
-    st.pyplot(fig)
+    fig=px.bar(res[res.location==region],x='year',y='data')
+    st.plotly_chart(fig)
+    

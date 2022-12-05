@@ -4,19 +4,11 @@ import plotly.express as px
 from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
-import altair as alt 
 plt.style.use('ggplot')
 rng = (0,25)
 with st.sidebar:
     region = st.selectbox("도시를 선택해주세요", areas)
 
-
-def plot_animation(df2):
-    lines = alt.Chart(df2).mark_line().encode(
-       x=alt.X('연도', axis=alt.Axis(title='연도')),
-       y=alt.Y('연합계',axis=alt.Axis(title='연합계')),
-     ).properties(width=600,height=450)
-    return lines
 
 def animation(speed = 0.1):
     hist = pd.Series()
@@ -91,25 +83,9 @@ with st.container():
     df2.drop(['Unnamed: 0'], axis = 1, inplace = True)
 
     ## line_chart animation
-    fig2 = px.line(df2, x='연도', y='연합계', color='지역')
-
-
-    N = df2.shape[0] # number of elements in the dataframe
-    burst = 6       # number of elements (months) to add to the plot
-    size = burst     # size of the current dataset
-
-    
+    fig2 = px.line(df2, x='연도', y='연합계', color='지역')    
     st.plotly_chart(fig2, use_container_width=True)
-    start_btn = st.button('Start')
 
-    if start_btn:
-        for i in range(1,N):
-            step_df2 = df2.iloc[0:size]
-            lines = plot_animation(step_df2)
-            size = i + burst
-            if size >= N: 
-                size = N - 1
-            time.sleep(0.1)
 
 
 

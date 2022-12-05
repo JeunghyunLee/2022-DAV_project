@@ -1,5 +1,6 @@
 import streamlit as st
 import matplotlib.pyplot as plt
+import plotly.express as px
 import pandas as pd
 import time
 from utilities import to_map_df, getmap, areas, years
@@ -115,34 +116,13 @@ with st.container():
     # load data and preprocessing labels
     df = raindata[raindata.location==region]
     seasonal = df.groupby(['year','season']).sum()[c].loc[years[1]:years[-1]]
-    spring = seasonal.loc[:,1]
-    summer = seasonal.loc[:,2]
-    fall = seasonal.loc[:,3]
-    winter = seasonal.loc[:,4]
+    seasonal = seasonal.reset_index()
+    seasonal.loc[seasonal['season']==1,'season'] = "봄"
+    seasonal.loc[seasonal['season']==2,'season'] = "여름"
+    seasonal.loc[seasonal['season']==3,'season'] = "가을"
+    seasonal.loc[seasonal['season']==4,'season'] = "겨울"
+    
 
+    fig = px.bar(seasonal, x='year', y=c, color = 'season')
+    st.plotly_chart(fig)
 
-    fig,ax = plt.subplots()
-    spring.plot(kind='bar',ax=ax,color='green')
-    summer.plot(kind='bar',ax=ax,bottom=spring,color='red')
-    fall.plot(kind='bar',ax=ax,bottom=spring+summer,color='orange')
-    winter.plot(kind='bar',ax=ax,bottom=spring+summer+fall,color='blue')        
-    st.pyplot(fig)
-
-    c1,c2 = st.columns(2)
-    c3,c4 = st.columns(2)
-#    with c1:
-#        fig,ax = standardBand(spring,color='green',r1=r1,r2=r2)
-#        st.text("봄 강수량")
-#        st.pyplot(fig)
-#    with c2:
-#        fig,ax = standardBand(summer,color='red',r1=r1,r2=r2)
-#        st.text("여름 강수량")
-#        st.pyplot(fig)
-#    with c3:
-#        fig,ax = standardBand(fall,color='orange',r1=r1,r2=r2)
-#        st.text("가을 강수량")
-#        st.pyplot(fig)
-#    with c4:
-#        fig,ax = standardBand(winter,color='blue',r1=r1,r2=r2)
-#        st.text("겨울 강수량")
-#        st.pyplot(fig)
