@@ -27,10 +27,10 @@ def load_rain_data():
         df['date'] = df.date.apply(lambda x: pd.Timestamp(x))
         df['year'] = df.date.apply(lambda x: x.year)
         df['month'] = df.date.apply(lambda x:x.month)
-        df['season'] = 4
-        df.loc[(df.month>=3)&(df.month<=5),'season'] = 1
-        df.loc[(df.month>=6)&(df.month<=8),'season'] = 2
-        df.loc[(df.month>=9)&(df.month<=11),'season'] = 3
+        df['season'] = '겨울'
+        df.loc[(df.month>=3)&(df.month<=5),'season'] = '봄'
+        df.loc[(df.month>=6)&(df.month<=8),'season'] = '여름'
+        df.loc[(df.month>=9)&(df.month<=11),'season'] = '가을'
         df['location'] = area
         res = pd.concat([res,df])
     res=res.reset_index()
@@ -115,14 +115,7 @@ st.write('### {} 지역의 강수량 통계'.format(region))
 with st.container():
     # load data and preprocessing labels
     df = raindata[raindata.location==region]
-    seasonal = df.groupby(['year','season']).sum()[c].loc[years[1]:years[-1]]
-    seasonal = seasonal.reset_index()
-    seasonal.loc[seasonal['season']==1,'season'] = "봄"
-    seasonal.loc[seasonal['season']==2,'season'] = "여름"
-    seasonal.loc[seasonal['season']==3,'season'] = "가을"
-    seasonal.loc[seasonal['season']==4,'season'] = "겨울"
-    
-
-    fig = px.bar(seasonal, x='year', y=c, color = 'season')
+    seasonal = df.groupby(['year','season']).sum()[c].loc[years[1]:].reset_index()
+    fig = px.bar(seasonal, x='year', y=c,color='season',category_orders={'season':['봄','여름','가을','겨울']})
     st.plotly_chart(fig)
 
