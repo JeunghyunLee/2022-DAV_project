@@ -9,6 +9,13 @@ rng = (0,25)
 with st.sidebar:
     region = st.selectbox("도시를 선택해주세요", areas)
 
+# 펼쳐지는 페이지 설정 
+with st.expander("설명"):
+     st.write("""
+            열대야일수는 밤최저기온이 25 ℃ 이상인 날로 정의합니다. 기온이 밤에도 25 ℃ 이하로 내려가지 않을 때에는 너무 더워서 사람이 잠들기 어렵기 때문에 더위를 나타내는 지표로 열대야를 사용합니다.
+        """)
+     st.image("https://t3.ftcdn.net/jpg/02/56/12/92/360_F_256129231_RHUe7uAQGPxUmUnFAtaB5pzYhPNCLCed.jpg")
+
 @st.cache
 def loaddata():
     res = pd.DataFrame()
@@ -48,7 +55,7 @@ res= loaddata()
 gb = res.groupby('year')
 # 상단 제목
 st.markdown(
-        '''### :night_with_stars: 열대야''')
+        '''### :night_with_stars: Tropical Nights Overview''')
 
 with st.container():
     # year slider
@@ -80,11 +87,49 @@ with st.container():
     st.button("Play",on_click=animation)
 
 
-
 st.markdown("""---""")
-st.markdown(
-        ''':bulb: 화면 좌측의 탭에서 지역을 선택해 주세요.''')
 st.write('### {} 지역의 열대야 통계'.format(region))
+with st.container():
+
+    df = res[res['location'] == region]
+ 
+    # 데이터 정보 요약 표현 가능한 metrics
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+    kpi1.metric(
+        label=f"now at",
+        value="%d년"%max(years),
+    )
+    kpi2.metric(
+        label=f"Average number of tropical nights",
+        value=round(
+            df['data'].mean()
+            ),
+        # delta=round(df_filtered['avg'].mean()) - 10,
+    )
+
+    
+    lowestyear = df.sort_values(by = 'data', ascending = True)[['year', 'data']].iloc[0,:]
+
+
+    kpi3.metric(
+        label="Coldest year 🥶",
+        value= lowestyear[0],
+        delta= 'num: '+ str(round(lowestyear[1], 1)),
+        help = 'Year of lowest number of tropical nights'
+    )
+
+
+    highestyear = df.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
+
+    # st.write(highestyear)
+
+    kpi4.metric(
+        label="Warmest year 🥵",
+        value= highestyear[0],
+        delta= 'num: '+ str(round(highestyear[1], 1)),
+        help = 'Year of highest number of tropical nights'
+    )
+
 with st.container():    
     ## region_selectbox
     df2 = res[res['location'] == region]
