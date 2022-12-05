@@ -1,14 +1,15 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import plotly.express as px
 from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
-plt.style.use('ggplot')
-rng = (0,25)
-with st.sidebar:
-    region = st.selectbox("도시를 선택해주세요", areas)
+import altair as alt 
+import plotly.express as px
 
+# markdown text로 제목 
+st.markdown("# 🌃 열대야")
+    
+    
 # 펼쳐지는 페이지 설정 
 with st.expander("설명"):
      st.write("""
@@ -16,17 +17,20 @@ with st.expander("설명"):
         """)
      st.image("https://t3.ftcdn.net/jpg/02/56/12/92/360_F_256129231_RHUe7uAQGPxUmUnFAtaB5pzYhPNCLCed.jpg")
 
-@st.cache
-def loaddata():
-    res = pd.DataFrame()
-    for area in areas:
-        df = pd.read_csv("data_tropical/%s.csv"%area)
-        df = df.dropna()
-        df['location']=area
-        res = pd.concat([res,df])
-    res=res.reset_index()
-    return res
 
+
+plt.style.use('ggplot')
+rng = (0,25)
+with st.sidebar:
+    region = st.selectbox("Select the City", areas)
+
+
+def plot_animation(df):
+    lines = alt.Chart(df).mark_line().encode(
+       x=alt.X('year', axis=alt.Axis(title='year')),
+       y=alt.Y('data',axis=alt.Axis(title='data')),
+     ).properties(width=600,height=450)
+    return lines
 
 def animation(speed = 0.1):
     hist = pd.Series()
@@ -51,16 +55,16 @@ def animation(speed = 0.1):
 
 
 # load all data
-res= loaddata()
+res= pd.read_csv('data_tropical/total.csv')
 gb = res.groupby('year')
-# 상단 제목
-st.markdown(
-        '''### :night_with_stars: Tropical Nights Overview''')
+
 
 with st.container():
     # year slider
-    year = st.slider("Select Year",min(years),max(years), value=max(years))
+    year = st.slider("연도를 선택해 주세요",min(years),max(years), value=max(years))
     temp = gb.get_group(year)
+    st.markdown(
+        ''':bulb: 아래의 Play 버튼을 눌러 연도별로 변화하는 열대야 일수를 확인할 수 있습니다.''')
 
     # plot
     label = st.empty()
@@ -87,55 +91,73 @@ with st.container():
     st.button("Play",on_click=animation)
 
 
-st.markdown("""---""")
-st.write('### {} 지역의 열대야 통계'.format(region))
-with st.container():
 
-    df = res[res['location'] == region]
+
+with st.container():
+    st.markdown("""---""")
+    st.markdown(
+        ''':bulb: 화면 좌측의 탭에서 지역을 선택해 주세요.''')
+    df = pd.read_csv('data_tropical/total.csv')
+    st.write('### {} 지역의 열대야 통계'.format(region))
+
+
+    ## region_selectbox
+    df = df[df['location'] == region]
+    df.drop(['Unnamed: 0'], axis = 1, inplace = True)
+
  
     # 데이터 정보 요약 표현 가능한 metrics
+    tropical_filtered = df[(df['location'] == region)]
+
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
     kpi1.metric(
-        label=f"now at",
-        value="%d년"%max(years),
+        label=f"현재",
+        value="2022년",
     )
     kpi2.metric(
-        label=f"Average number of tropical nights",
+        label=f"열대야 평균 일수",
         value=round(
-            df['data'].mean()
+            tropical_filtered['data'].mean()
             ),
         # delta=round(df_filtered['avg'].mean()) - 10,
     )
 
     
-    lowestyear = df.sort_values(by = 'data', ascending = True)[['year', 'data']].iloc[0,:]
+    lowestyear = tropical_filtered.sort_values(by = 'data', ascending = True)[['year', 'data']].iloc[0,:]
 
 
-    kpi3.metric(
-        label="Coldest year 🥶",
+    kpi4.metric(
+        label="열대야 일수가 가장 적었던 해 🥶",
         value= lowestyear[0],
         delta= 'num: '+ str(round(lowestyear[1], 1)),
         help = 'Year of lowest number of tropical nights'
     )
 
 
-    highestyear = df.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
+    highestyear = tropical_filtered.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
 
     # st.write(highestyear)
 
-    kpi4.metric(
-        label="Warmest year 🥵",
+    kpi3.metric(
+        label="열대야 일수가 가장 많았던 해🥵",
         value= highestyear[0],
         delta= 'num: '+ str(round(highestyear[1], 1)),
         help = 'Year of highest number of tropical nights'
     )
 
-with st.container():    
-    ## region_selectbox
-    df2 = res[res['location'] == region]
+
+
+    ## line_chart 
+    with st.container():
+        st.markdown("### {} 지역의 연도별 열대야 일수".format(region))
+        fig2 = px.line(df, x='year', y='data', color='location')
+        fig2.update_layout(yaxis_range=[0,30])
+
+       
  
-    ## line_chart animation
-    fig2 = px.line(df2, x='year', y='data')    
+    
     st.plotly_chart(fig2, use_container_width=True)
+
 
 
