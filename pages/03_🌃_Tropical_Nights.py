@@ -85,17 +85,10 @@ st.markdown("""---""")
 st.markdown(
         ''':bulb: 화면 좌측의 탭에서 지역을 선택해 주세요.''')
 st.write('### {} 지역의 열대야 통계'.format(region))
-with st.container():
-<<<<<<< HEAD
-    
-=======
-    df2 = pd.read_csv('data_tropical/total3.csv')
-
->>>>>>> eb3374681e03907a009da04e1fa48a488d396326
+with st.container():    
     ## region_selectbox
-    df2 = df2[df2['지역'] == region]
-    df2.drop(['Unnamed: 0'], axis = 1, inplace = True)
-
+    df2 = res[res['location'] == region]
+ 
     ## line_chart animation
     fig2 = px.line(df2, x='연도', y='연합계', color='지역')    
     st.plotly_chart(fig2, use_container_width=True)
