@@ -28,9 +28,9 @@ def loaddata():
         df = df.dropna()
         df['date'] = df.date.apply(lambda x: pd.Timestamp(x))
         df['year'] = df.date.apply(lambda x: x.year)
-        temp = df.groupby('year').mean()[['avg']]
-        temp['location'] = area
-        res = pd.concat([res,temp])
+        df['month'] = df.date.apply(lambda x: x.month)
+        df['location'] = area
+        res = pd.concat([res,df])
     res=res.reset_index()
     return res
 
@@ -61,35 +61,20 @@ def animation(speed = 0.01):
 
 
 
-
-# Load files
-df = pd.DataFrame()
-for area in areas :
-    temp = pd.read_csv(path +str(area) + '.csv')
-    temp['location'] = area
-    df = pd.concat([df, temp], axis = 0)
-
-df = df.dropna()
-df['date'] = df['date'].apply(lambda x: pd.Timestamp(x.strip()))
-df['year'] = df['date'].dt.year
-df['month'] = df['date'].dt.month
+# load all data
+df=loaddata()
 
 # 상단 제목
 st.markdown(
         '''## :thermometer: 기온''')
 with st.container():
-    # load all data
-    res=loaddata()
+    res = df.groupby(['year','location']).mean()[['avg']].reset_index()
     gb = res.groupby('year')
     
     with st.container():
         # year slider
         year = st.slider('연도를 선택해 주세요',min(years),max(years), value=max(years))
         temp = gb.get_group(year)
-        
-        st.markdown(
-        ''':bulb: 아래의 Play 버튼을 눌러 연도별로 변화하는 기온을 확인할 수 있습니다.''')
-        
         # plot
         label = st.empty()
         e1 = st.empty()
@@ -115,8 +100,6 @@ with st.container():
 
 with st.container():
     st.markdown("""---""")
-    st.markdown(
-        ''':bulb: 화면 좌측의 탭에서 지역을 선택해 주세요.''')
     st.write('### {} 지역의 기온 통계'.format(region))
     kpi1, kpi2, kpi3, kpi4 = st.columns(4)
 
