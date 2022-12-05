@@ -90,7 +90,7 @@ with st.container():
     df2 = res[res['location'] == region]
  
     ## line_chart animation
-    fig2 = px.line(df2, x='연도', y='연합계', color='지역')    
+    fig2 = px.line(df2, x='year', y='data')    
     st.plotly_chart(fig2, use_container_width=True)
 
 
