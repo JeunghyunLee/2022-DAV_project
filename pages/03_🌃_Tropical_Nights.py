@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import plotly.express as px
 from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
