@@ -59,7 +59,7 @@ st.markdown(
 
 with st.container():
     # year slider
-    year = st.slider("Select Year",min(years),max(years), value=max(years))
+    year = st.slider("연도를 선택해 주세요",min(years),max(years), value=max(years))
     temp = gb.get_group(year)
 
     # plot
@@ -100,7 +100,7 @@ with st.container():
         value="%d년"%max(years),
     )
     kpi2.metric(
-        label=f"Average number of tropical nights",
+        label=f"열대야 평균 일수",
         value=round(
             df['data'].mean()
             ),
@@ -115,7 +115,7 @@ with st.container():
         label="Coldest year 🥶",
         value= lowestyear[0],
         delta= 'num: '+ str(round(lowestyear[1], 1)),
-        help = 'Year of lowest number of tropical nights'
+        help = '가장 적었던 해 🥶'
     )
 
 
@@ -124,7 +124,7 @@ with st.container():
     # st.write(highestyear)
 
     kpi4.metric(
-        label="Warmest year 🥵",
+        label="가장 많았던 해🥵",
         value= highestyear[0],
         delta= 'num: '+ str(round(highestyear[1], 1)),
         help = 'Year of highest number of tropical nights'
