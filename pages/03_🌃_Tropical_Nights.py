@@ -1,14 +1,36 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import plotly.express as px
 from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
+import altair as alt 
+import plotly.express as px
+
+# markdown text로 제목 
+st.markdown("# 열대야일수")
+    
+    
+# 펼쳐지는 페이지 설정 
+with st.expander("See explanation"):
+     st.write("""
+            열대야일수는 밤최저기온이 25 ℃ 이상인 날로 정의합니다. 기온이 밤에도 25 ℃ 이하로 내려가지 않을 때에는 너무 더워서 사람이 잠들기 어렵기 때문에 더위를 나타내는 지표로 열대야를 사용합니다.
+        """)
+     st.image("https://t3.ftcdn.net/jpg/02/56/12/92/360_F_256129231_RHUe7uAQGPxUmUnFAtaB5pzYhPNCLCed.jpg")
+
+
+
 plt.style.use('ggplot')
 rng = (0,25)
 with st.sidebar:
-    region = st.selectbox("도시를 선택해주세요", areas)
+    region = st.selectbox("Select the City", areas)
 
+
+def plot_animation(df):
+    lines = alt.Chart(df).mark_line().encode(
+       x=alt.X('year', axis=alt.Axis(title='year')),
+       y=alt.Y('data',axis=alt.Axis(title='data')),
+     ).properties(width=600,height=450)
+    return lines
 
 def animation(speed = 0.1):
     hist = pd.Series()
@@ -38,7 +60,7 @@ gb = res.groupby('year')
 
 # 상단 제목
 st.markdown(
-        '''### :night_with_stars: 열대야''')
+        '''### :night_with_stars: Tropical Nights Overview''')
 
 with st.container():
     # year slider
@@ -72,20 +94,61 @@ with st.container():
 
 
 st.markdown("""---""")
-st.markdown(
-        ''':bulb: 화면 좌측의 탭에서 지역을 선택해 주세요.''')
-st.write('### {} 지역의 열대야 통계'.format(region))
+st.write('### Region Statistics of {}'.format(region))
 with st.container():
-    df2 = pd.read_csv('data_tropical/total3.csv')
+    df = pd.read_csv('data_tropical/total.csv')
 
     ## region_selectbox
-    df2 = df2[df2['지역'] == region]
-    df2.drop(['Unnamed: 0'], axis = 1, inplace = True)
+    df = df[df['location'] == region]
+    df.drop(['Unnamed: 0'], axis = 1, inplace = True)
 
-    ## line_chart animation
-    fig2 = px.line(df2, x='연도', y='연합계', color='지역')    
+ 
+    # 데이터 정보 요약 표현 가능한 metrics
+    tropical_filtered = df[(df['location'] == region)]
+
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+
+    kpi1.metric(
+        label=f"now at",
+        value="2022년",
+    )
+    kpi2.metric(
+        label=f"Average number of tropical nights",
+        value=round(
+            tropical_filtered['data'].mean()
+            ),
+        # delta=round(df_filtered['avg'].mean()) - 10,
+    )
+
+    
+    lowestyear = tropical_filtered.sort_values(by = 'data', ascending = True)[['year', 'data']].iloc[0,:]
+
+
+    kpi3.metric(
+        label="Coldest year 🥶",
+        value= lowestyear[0],
+        delta= 'num: '+ str(round(lowestyear[1], 1)),
+        help = 'Year of lowest number of tropical nights'
+    )
+
+
+    highestyear = tropical_filtered.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
+
+    # st.write(highestyear)
+
+    kpi4.metric(
+        label="Warmest year 🥵",
+        value= highestyear[0],
+        delta= 'num: '+ str(round(highestyear[1], 1)),
+        help = 'Year of highest number of tropical nights'
+    )
+
+
+
+    ## line_chart 
+    fig2 = px.line(df, x='year', y='data', color='location')
+    fig2.update_layout(yaxis_range=[0,30])
     st.plotly_chart(fig2, use_container_width=True)
-
 
 
 
