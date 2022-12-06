@@ -108,22 +108,14 @@ with st.container():
 
 
     kpi3.metric(
-        label="Coldest year 🥶",
-        value= lowestyear[0],
-        delta= 'num: '+ str(round(lowestyear[1], 1)),
-        help = '가장 적었던 해 🥶'
+        label="가장 적었던 해🥶",
+        value= int(lowestyear[0]),
     )
 
-
     highestyear = df.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
-
-    # st.write(highestyear)
-
     kpi4.metric(
         label="가장 많았던 해🥵",
-        value= highestyear[0],
-        delta= 'num: '+ str(round(highestyear[1], 1)),
-        help = 'Year of highest number of tropical nights'
+        value= int(highestyear[0]),
     )
 
 with st.container():    
