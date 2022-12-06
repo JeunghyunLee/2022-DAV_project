@@ -48,7 +48,7 @@ res= loaddata()
 gb = res.groupby('year')
 # 상단 제목
 st.markdown(
-        '''### :night_with_stars: 열대야''')
+        '''## :night_with_stars: 열대야''')
 
 # 펼쳐지는 페이지 설정
 with st.expander("설명"):
