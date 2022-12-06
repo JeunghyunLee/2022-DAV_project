@@ -12,8 +12,7 @@ rng = (0,25)
 st.markdown(
         '''## :sun_with_face: 폭염''')
 
-with st.sidebar:
-    region = st.selectbox("도시를 선택해주세요", areas)
+
 
 def open_df(name) :
     df = pd.read_csv(path+name + '.csv')
@@ -98,9 +97,14 @@ with st.container():
 
     st.button("Play",on_click=animation)
 
-st.markdown("""---""")
-st.write('### {} 지역의 폭염 통계'.format(region))
 with st.container():
+    st.markdown("""---""")
+    s1,s2 = st.columns([1,5])
+    with s1:
+        region = st.selectbox('',areas, label_visibility='collapsed')
+    with s2:
+        st.write('### 지역의 폭염 통계')
+
 
     df = res[res['location'] == region]
 
@@ -123,8 +127,6 @@ with st.container():
         value= int(highestyear[0])
     )
 
-st.markdown("""---""")
-st.write('### {} 지역의 지역별 통계'.format(region))
 with st.container():
     st.subheader(f'{region} 지역의 평균 폭염 일수(1973년~2022년)')
     fig=px.bar(res[res.location==region],x='year',y='data')

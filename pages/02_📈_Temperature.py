@@ -17,8 +17,6 @@ st.set_page_config(
         'About': "# 2022 winter Data Sciencen and Visualization project. Contributors:  "
     }
 )
-with st.sidebar:
-    region = st.selectbox("Select the City", areas)
     
 @st.cache
 def loaddata():
@@ -102,7 +100,12 @@ with st.container():
 
 with st.container():
     st.markdown("""---""")
-    st.write('### {} 지역의 기온 통계'.format(region))
+    s1,s2 = st.columns([1,5])
+    with s1:
+        region = st.selectbox('',areas, label_visibility='collapsed')
+    with s2:
+        st.write('### 지역의 기온 통계')
+    
     kpi2, kpi3, kpi4 = st.columns(3)
 
     # 선택한 지역, 연도 filter
@@ -134,24 +137,11 @@ with st.container():
         # delta= 'goes down to' + str(round(lowestyear[1], 1)),
         help = 'By average of winter min temp'
     )
-
-
-densityyear = df_filtered.groupby(by = ['year']).mean().reset_index()[['year', 'max']]
-densityyear = densityyear.transpose()
-densityyear.columns = range(1973, 2023)
-# st.write(densityyear)
-densityyear.drop(labels ='year', axis = 0, inplace = True )
-
 with st.container():
-    st.markdown("### {} 지역의 평균 최고기온".format(region))
-    fig_year = px.imshow(densityyear, color_continuous_scale='reds')
-    fig_year.update_yaxes(showticklabels=False)
-    fig_year.update_layout(
-        legend=dict(orientation="h"  ), 
-        yaxis_title="Average of Maximum Temperature", 
-        margin=dict(l=20, r=20, t=20, b=10)
-    
-    )
-
-    st.plotly_chart(fig_year,use_container_width = True )
+    summers = df_filtered[df_filtered.season=='여름'].groupby('year').mean()[['max']].transpose()
+    winters = df_filtered[df_filtered.season=='겨울'].groupby('year').mean()[['min']].transpose()
+    fig1 = px.imshow(summers,color_continuous_scale='reds',title="여름 평균 최고 기온")
+    fig2 = px.imshow(winters,color_continuous_scale='blues', title="겨울 평균 최저 기온")
+    st.plotly_chart(fig1)
+    st.plotly_chart(fig2)
 

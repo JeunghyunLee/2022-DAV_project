@@ -6,8 +6,6 @@ import time
 import streamlit as st
 plt.style.use('ggplot')
 rng = (0,25)
-with st.sidebar:
-    region = st.selectbox("도시를 선택해주세요", areas)
 
 @st.cache
 def loaddata():
@@ -87,9 +85,13 @@ with st.container():
     st.button("Play",on_click=animation)
 
 
-st.markdown("""---""")
-st.write('### {} 지역의 열대야 통계'.format(region))
 with st.container():
+    st.markdown("""---""")
+    s1,s2 = st.columns([1,5])
+    with s1:
+        region = st.selectbox('',areas, label_visibility='collapsed')
+    with s2:
+        st.write('### 지역의 열대야 통계')
 
     df = res[res['location'] == region]
  
