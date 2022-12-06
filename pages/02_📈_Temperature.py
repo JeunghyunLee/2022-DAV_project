@@ -17,8 +17,6 @@ st.set_page_config(
         'About': "# 2022 winter Data Sciencen and Visualization project. Contributors:  "
     }
 )
-with st.sidebar:
-    region = st.selectbox("Select the City", areas)
     
 @st.cache
 def loaddata():
@@ -102,7 +100,12 @@ with st.container():
 
 with st.container():
     st.markdown("""---""")
-    st.write('### {} 지역의 기온 통계'.format(region))
+    s1,s2 = st.columns([1,5])
+    with s1:
+        region = st.selectbox('',areas, label_visibility='collapsed')
+    with s2:
+        st.write('### 지역의 기온 통계')
+    
     kpi2, kpi3, kpi4 = st.columns(3)
 
     # 선택한 지역, 연도 filter

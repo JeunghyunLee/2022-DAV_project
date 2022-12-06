@@ -9,8 +9,6 @@ plt.style.use('ggplot')
 st.markdown(
         '''## :umbrella_with_rain_drops: 강수량''')
 
-with st.sidebar:
-    region = st.selectbox("Select the City", areas)
 
 c = "rainfall"
 r1=10
@@ -109,9 +107,14 @@ with st.container():
     st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
 
 
-st.markdown("""---""")
-st.write('### {} 지역의 강수량 통계'.format(region))
 with st.container():
+    st.markdown("""---""")
+    s1,s2 = st.columns([1,5])
+    with s1:
+        region = st.selectbox('',areas, label_visibility='collapsed')
+    with s2:
+        st.write('### 지역의 강수량 통계')
+
     t1, t2, t3 = st.columns(3)
     t4,t5,t6 = st.columns(3)
     # 선택한 지역, 연도 filter
