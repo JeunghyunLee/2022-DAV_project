@@ -9,13 +9,6 @@ rng = (0,25)
 with st.sidebar:
     region = st.selectbox("도시를 선택해주세요", areas)
 
-# 펼쳐지는 페이지 설정 
-with st.expander("설명"):
-     st.write("""
-            열대야일수는 밤최저기온이 25 ℃ 이상인 날로 정의합니다. 기온이 밤에도 25 ℃ 이하로 내려가지 않을 때에는 너무 더워서 사람이 잠들기 어렵기 때문에 더위를 나타내는 지표로 열대야를 사용합니다.
-        """)
-     st.image("https://t3.ftcdn.net/jpg/02/56/12/92/360_F_256129231_RHUe7uAQGPxUmUnFAtaB5pzYhPNCLCed.jpg")
-
 @st.cache
 def loaddata():
     res = pd.DataFrame()
@@ -55,7 +48,14 @@ res= loaddata()
 gb = res.groupby('year')
 # 상단 제목
 st.markdown(
-        '''### :night_with_stars: Tropical Nights Overview''')
+        '''### :night_with_stars: 열대야''')
+
+# 펼쳐지는 페이지 설정
+with st.expander("설명"):
+     st.write("""
+            열대야일수는 밤최저기온이 25 ℃ 이상인 날로 정의합니다. 기온이 밤에도 25 ℃ 이하로 내려가지 않을 때에는 너무 더워서 사람이 잠들기 어렵기 때문에 더위를 나타내는 지표로 열대야를 사용합니다.
+        """)
+     st.image("https://t3.ftcdn.net/jpg/02/56/12/92/360_F_256129231_RHUe7uAQGPxUmUnFAtaB5pzYhPNCLCed.jpg")
 
 with st.container():
     # year slider
