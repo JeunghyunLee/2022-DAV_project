@@ -28,11 +28,14 @@ st.image("./melting_earth.png", width=130)
 st.markdown('# 녹는 아이스크림, 지구맛 출시 :droplet:')
 # st.markdown("This page is a Streamlit dashboard that can be used to explore the statistics about climate change in South Korea over the past 50 years.")
 st.markdown("#### 들어가며")
-st.markdown("우리나라는 최근, 100년 전에 비해 **여름이 20일** 길어지고 **겨울이 22일** 짧아졌다고 합니다. 봄은 17일 정도, 여름은 11일 정도 빨리 시작되고 있습니다.")
+st.markdown('''우리나라에 살고 계신 여러분, 10년 전에 비해 요즘, 지구가 얼마나 더워졌다고 느끼시나요?    
+기상청에 따르면, 100년 전에 비해 **여름이 20일** 길어지고 **겨울이 22일** 짧아졌다고 합니다.
+이에 따라 봄은 17일 정도, 여름은 11일 정도 빨리 시작되고 있습니다.
+''')
 st.markdown('''>* 최근 30년(1991\~2020년)은 과거 30년(1912\~1940)년에 비해 **연평균기온이 1.6℃ 상승**하였습니다.
 >* 출처: [*2021년 기후변화 보고서, 기상청 기후과학국*](https://www.kma.go.kr/kma/servlet/NeoboardProcess?mode=download&bid=press&num=1194009&fno=2&callback=https%3A%2F%2Fwww.kma.go.kr%2Fkma%2Fnews%2Fpress.jsp&ses=USERSESSION&k=ATC202104271102112_053690f3-20d6-4005-b700-009a4e1fd9da.pdf)
 ''')
-st.markdown("다시 한 번 기후 위기의 심각성을 체감하고, *2030년 온실가스 감축*이라는 목표와, *2050년 탄소중립*까지 숨가쁘게 달려가는 데에 기여할 수 있기를 기대합니다. ")
+st.markdown("본 페이지를 통해 다시 한 번 기후 위기의 심각성을 체감하고, *2030년 온실가스 감축*이라는 목표와, *2050년 탄소중립*까지 숨가쁘게 달려가는 데에 기여할 수 있기를 기대합니다. ")
 st.markdown("#### 사용한 데이터")
 st.markdown('''
         * 기상청 [기상자료개방포털](https://data.kma.go.kr/stcs/grnd/grndTaList.do?pgmNo=70)
