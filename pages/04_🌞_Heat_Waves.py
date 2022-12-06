@@ -60,8 +60,12 @@ def animation(speed = 0.1):
 
 
 #--------------------------------------------------
-
-
+with st.expander("설명"):
+    st.write("""
+            폭염은 낮 최고기온이 섭씨 33도를 넘어서는 매우 더운 날씨를 말하는데, 낮 최고기온이 33도 이상이면서 이 더위가 2일 이상 지속될 것으로 예상될 때 폭염 주의보, 낮 최고기온이 35도 이상이면서 이 더위가 2일 이상 지속될 것으로 예상될 때 폭염 경보가 발령된다. 
+        """)
+    st.image("https://www.rmets.org/sites/default/files/tweet%252011.jpg")
+#--------------------------------------------------
 # load all data
 res= loaddata()
 gb = res.groupby('year')
@@ -94,6 +98,47 @@ with st.container():
 
     st.button("Play",on_click=animation)
 
+st.markdown("""---""")
+st.write('### {} 지역의 폭염 통계'.format(region))
+with st.container():
+
+    df = res[res['location'] == region]
+
+    # 데이터 정보 요약 표현 가능한 metrics
+    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+    kpi1.metric(
+        label=f"now at",
+        value="%d년"%max(years),
+    )
+    kpi2.metric(
+        label=f"폭염 평균 일수",
+        value=round(
+            df['data'].mean()
+        ),
+        # delta=round(df_filtered['avg'].mean()) - 10,
+    )
+
+
+    lowestyear = df.sort_values(by = 'data', ascending = True)[['year', 'data']].iloc[0,:]
+
+
+    # kpi3.metric(
+    #     label="가장 적었던 해 🥶",
+    #     value= lowestyear[0],
+    #     delta= 'num: '+ str(round(lowestyear[1], 1)),
+    # )
+
+
+    highestyear = df.sort_values(by = 'data', ascending = False)[['year', 'data']].iloc[0,:]
+
+    # st.write(highestyear)
+
+    kpi3.metric(
+        label="가장 많았던 해🥵",
+        value= highestyear[0],
+        delta= 'num: '+ str(round(highestyear[1], 1)),
+
+    )
 
 st.markdown("""---""")
 st.write('### {} 지역의 지역별 통계'.format(region))
