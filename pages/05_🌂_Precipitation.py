@@ -2,6 +2,7 @@ import streamlit as st
 import matplotlib.pyplot as plt
 import plotly.express as px
 import pandas as pd
+from sklearn.linear_model import LinearRegression
 import time
 from utilities import to_map_df, getmap, areas, years
 plt.style.use('ggplot')
@@ -60,15 +61,21 @@ def standardBand(data,r1=30,r2=30,color='blue'):
 
 
 def rain_animation(gb, c, rng, speed=0.1):
+    model=LinearRegression()
     histfig,hax = plt.subplots()
     hist = pd.Series(dtype=float)
     for year,temp in gb:   
         hax.clear()
         mdf = to_map_df(temp,datacol=[c])
-        hist.loc[year] = mdf[c].std()
+        hist.loc[year] = mdf[c].var()
+        x=hist.index.values.reshape(-1,1)
+        y=hist.values
+        model.fit(x,y)
+        a,b = model.coef_,model.intercept_
     
         mapfig=getmap(mdf,col=c,rng=rng)
-        hist.plot(ax=hax, color='blue', title = "Yearly Standard Deviation")
+        hist.plot(ax=hax, color='blue', title = "Yearly Variance")
+        hax.plot(x,a*x+b,color='black')
         with e1:
             st.text(year)
         with e2:
@@ -77,6 +84,7 @@ def rain_animation(gb, c, rng, speed=0.1):
                 st.plotly_chart(mapfig,use_container_width=True)
             with c2:
                 st.pyplot(histfig)
+                st.text("기울기: %.2f"%a)
         time.sleep(speed)
 
 
@@ -92,10 +100,16 @@ with st.container():
     e2 = st.empty()
     temp = gb.get_group(year)    
     mdf = to_map_df(temp, datacol=[c])
-    hist = gb.std()[c].loc[:year]
-    
+    hist = gb.var()[c].loc[:year]
+    x=hist.index.values.reshape(-1,1)
+    y=hist.values
+    model=LinearRegression()
+    model.fit(x,y)
+    a,b = model.coef_,model.intercept_
+
     mapfig=getmap(mdf,col=c,rng=rng)
-    hist.plot(ax=hax,color='blue',title = "Yearly Standard Deviation")
+    hist.plot(ax=hax,color='blue',title = "Yearly Variance")
+    hax.plot(x,a*x+b,color='black')
     with e1:
         st.text(year)
     with e2:
@@ -104,6 +118,7 @@ with st.container():
             st.plotly_chart(mapfig,use_container_width=True)
         with c2:
             st.pyplot(histfig)
+            st.text("기울기: %.2f"%a)
     st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
 
 

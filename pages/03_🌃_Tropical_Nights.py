@@ -4,6 +4,7 @@ import plotly.express as px
 from utilities import to_map_df, getmap, areas, years
 import time
 import streamlit as st
+from sklearn.linear_model import LinearRegression
 plt.style.use('ggplot')
 rng = (0,25)
 
@@ -20,15 +21,21 @@ def loaddata():
 
 
 def animation(speed = 0.1):
+    model=LinearRegression()
     hist = pd.Series()
     histfig,hax = plt.subplots()
     for year,data in gb:
         hax.clear()
         mdf = to_map_df(data,datacol = ['data'])
         hist.loc[year] = mdf.sum()['data']
+        x=hist.index.values.reshape(-1,1)
+        y=hist.values
+        model.fit(x,y)
+        a,b = model.coef_,model.intercept_
         # 지도 그리기
         mapfig=getmap(mdf, col='data', rng=rng)
-        hist.plot(ax = hax, color='purple',title='Yearly Sum')
+        hist.plot(ax = hax, color='red',title='Yearly Sum')
+        hax.plot(x,a*x+b,color='black')
         with label:
             st.text(year)
         with e1:
@@ -37,6 +44,7 @@ def animation(speed = 0.1):
                 st.plotly_chart(mapfig, use_container_width=True)
             with c2:
                 st.pyplot(histfig)
+                st.text("기울기: %.2f"%a)
         time.sleep(speed)
 
 
@@ -67,11 +75,18 @@ with st.container():
 
     mdf = to_map_df(temp,datacol=['data'])
     hist = gb.sum()['data'].loc[:year]
+    x=hist.index.values.reshape(-1,1)
+    y=hist.values
+    model=LinearRegression()
+    model.fit(x,y)
+    a,b = model.coef_,model.intercept_
+
 
     # 지도 그리기
     histfig,hax = plt.subplots()
     mapfig = getmap(mdf,col='data', rng=rng)
-    hist.plot(ax = hax,color = 'purple',title='Yearly Sum')
+    hist.plot(ax = hax,color = 'red',title='Yearly Sum')
+    hax.plot(x,a*x+b,color='black')
 
     with label:
         st.text(year)
@@ -81,6 +96,7 @@ with st.container():
             st.plotly_chart(mapfig, use_container_width=True)
         with c2:
             st.pyplot(histfig)
+            st.text("기울기: %.2f"%a)
 
     st.button("Play",on_click=animation)
 
@@ -120,12 +136,7 @@ with st.container():
         value= int(highestyear[0]),
     )
 
-with st.container():    
-    ## region_selectbox
-    df2 = res[res['location'] == region]
- 
-    ## line_chart animation
-    fig2 = px.line(df2, x='year', y='data')    
+    fig2 = px.line(df, x='year', y='data')    
     st.plotly_chart(fig2, use_container_width=True)
 
 
