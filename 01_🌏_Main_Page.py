@@ -39,7 +39,10 @@ st.markdown('''
 >* 폭염·열대야 일수 등 더위 관련 지수의 증가가 뚜렷하고, 호우와 같은 극한 강수 발생일수도 증가하였습니다.
 >* 출처: [*2021년 기후변화 보고서, 기상청 기후과학국*](https://www.kma.go.kr/kma/servlet/NeoboardProcess?mode=download&bid=press&num=1194009&fno=2&callback=https%3A%2F%2Fwww.kma.go.kr%2Fkma%2Fnews%2Fpress.jsp&ses=USERSESSION&k=ATC202104271102112_053690f3-20d6-4005-b700-009a4e1fd9da.pdf)
 ''')
-st.markdown("본 페이지를 통해 다시 한 번 기후 위기의 심각성을 체감하고, *2030년 온실가스 감축*이라는 목표와, *2050년 탄소중립*까지 숨가쁘게 달려가는 데에 기여할 수 있기를 기대합니다. ")
+st.markdown('''
+폭염, 열대야, 여름 일수, 일일 이상최고기온 등 다양한 고온 **극한기후현상**을 한눈에 볼 수 있도록 본 페이지를 제작하게 되었습니다.
+다시 한 번 기후 위기의 심각성을 체감하고, *2030년 온실가스 감축*이라는 목표와, *2050년 탄소중립*까지 달려가는 데에 기여할 수 있기를 기대합니다.
+''')
 st.markdown("#### 사용한 데이터")
 st.markdown('''
         * 기상청 [기상자료개방포털](https://data.kma.go.kr/stcs/grnd/grndTaList.do?pgmNo=70)
