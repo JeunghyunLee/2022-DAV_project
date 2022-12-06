@@ -101,15 +101,11 @@ with st.container():
 with st.container():
     st.markdown("""---""")
     st.write('### {} 지역의 기온 통계'.format(region))
-    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
+    kpi2, kpi3, kpi4 = st.columns(3)
 
     # 선택한 지역, 연도 filter
     df_filtered = df[(df['location'] == region) ]
 
-    kpi1.metric(
-        label=f"현재",
-        value=str(year)+'년',
-    )
 
     kpi2.metric(
         label=f"겨울과 여름 평균 기온",

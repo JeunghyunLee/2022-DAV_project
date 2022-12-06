@@ -94,11 +94,7 @@ with st.container():
     df = res[res['location'] == region]
  
     # 데이터 정보 요약 표현 가능한 metrics
-    kpi1, kpi2, kpi3, kpi4 = st.columns(4)
-    kpi1.metric(
-        label=f"now at",
-        value="%d년"%max(years),
-    )
+    kpi2, kpi3, kpi4 = st.columns(3)
     kpi2.metric(
         label=f"열대야 평균 일수",
         value=round(
