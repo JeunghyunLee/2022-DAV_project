@@ -140,24 +140,22 @@ with st.container():
         help = 'By average of winter min temp'
     )
 
-    fig_col3, fig_col4  = st.columns(2)
+densityyear = df_filtered.groupby(by = ['year']).mean().reset_index()[['year', 'max']]
+densityyear = densityyear.transpose()
+densityyear.columns = range(1973, 2023)
+# st.write(densityyear)
+densityyear.drop(labels ='year', axis = 0, inplace = True )
 
-    densityyear = df_filtered.groupby(by = ['year']).mean().reset_index()[['year', 'max']]
-    densityyear = densityyear.transpose()
-    densityyear.columns = range(1973, 2023)
-    # st.write(densityyear)
-    densityyear.drop(labels ='year', axis = 0, inplace = True )
+with st.container():
+    st.markdown("### {} 지역의 평균 최고기온".format(region))
+    fig_year = px.imshow(densityyear, color_continuous_scale='reds')
+    fig_year.update_yaxes(showticklabels=False)
+    fig_year.update_layout(
+        legend=dict(orientation="h"  ), 
+        yaxis_title="Average of Maximum Temperature", 
+        margin=dict(l=20, r=20, t=20, b=10)
+    
+    )
 
-    with st.container():
-        st.markdown("### {} 지역의 평균 최고기온".format(region))
-        fig_year = px.imshow(densityyear, color_continuous_scale='reds')
-        fig_year.update_yaxes(showticklabels=False)
-        fig_year.update_layout(
-            legend=dict(orientation="h"  ), 
-            yaxis_title="Average of Maximum Temperature", 
-            margin=dict(l=20, r=20, t=20, b=10)
-        
-        )
-
-        st.plotly_chart(fig_year,use_container_width = True )
+    st.plotly_chart(fig_year,use_container_width = True )
 

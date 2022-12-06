@@ -110,8 +110,44 @@ with st.container():
             st.pyplot(histfig)
     st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
 
+
 st.markdown("""---""")
 st.write('### {} 지역의 강수량 통계'.format(region))
+with st.container():
+    t1, t2, t3 = st.columns(3)
+    t4,t5,t6 = st.columns(3)
+    # 선택한 지역, 연도 filter
+    temp = raindata[raindata.location==region]
+    tt = temp[temp.season=='여름'].groupby(['year']).sum()[c].loc[years[1]:]
+    summeravg=round(tt.mean())
+    maxsummer = tt.idxmax()
+    minsummer = tt.idxmin()
+
+    yearsum = temp.groupby('year').sum()[c].loc[years[1]:]
+    avgyear = round(yearsum.mean())
+    maxyear = yearsum.idxmax()
+    minyear = yearsum.idxmin()
+    
+    t1.metric(
+        label=f"연평균 강수량",
+        value=str(avgyear) + 'mm'
+        )
+
+    t2.metric(
+        label="가장 촉촉한 해",
+        value= int(maxyear),
+        )
+
+    t3.metric(
+        label="가장 건조한 해",
+        value= int(minyear)
+        )
+    t4.metric(label = "여름 평균 강수량",value=str(summeravg)+"mm")
+    t5.metric(label="가장 촉촉한 여름", value = int(maxsummer))
+    t6.metric(label="가장 건조한 여름", value=int(minsummer))
+
+
+
 with st.container():
     # load data and preprocessing labels
     df = raindata[raindata.location==region]
