@@ -7,8 +7,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'About': "# 2022 데이터 시각화 : 나연, 성만, 정현, 채린, 한휘  "
-        'Reference' : 'https://www.tumblbug.com/meltingearth'
+        'About': ''' # 2022 데이터 시각화 : 나연, 성만, 정현, 채린, 한휘
+                     Reference : https://www.tumblbug.com/meltingearth'''
     }
 )
 
