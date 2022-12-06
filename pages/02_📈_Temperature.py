@@ -137,11 +137,18 @@ with st.container():
         # delta= 'goes down to' + str(round(lowestyear[1], 1)),
         help = 'By average of winter min temp'
     )
-with st.container():
+
     summers = df_filtered[df_filtered.season=='여름'].groupby('year').mean()[['max']].transpose()
     winters = df_filtered[df_filtered.season=='겨울'].groupby('year').mean()[['min']].transpose()
-    fig1 = px.imshow(summers,color_continuous_scale='reds',title="여름 평균 최고 기온")
-    fig2 = px.imshow(winters,color_continuous_scale='blues', title="겨울 평균 최저 기온")
+    fig1 = px.imshow(summers,color_continuous_scale='reds',height=10,title="여름 평균 최고 기온")
+    fig2 = px.imshow(winters,color_continuous_scale=px.colors.sequential.Blues[::-1],height=10,title="겨울 평균 최저 기온")
+    fig1.update_layout(height=20,margin=dict(b=0),yaxis_title=None,xaxis_title=None)
+    fig2.update_layout(height=20,margin=dict(b=0),yaxis_title=None,xaxis_title=None)
+    fig1.update_yaxes(visible=False)
+    fig2.update_yaxes(visible=False)
+    
+    
+    
     st.plotly_chart(fig1)
     st.plotly_chart(fig2)
 
