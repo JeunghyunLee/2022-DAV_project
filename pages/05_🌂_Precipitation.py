@@ -143,8 +143,8 @@ with st.container():
         value= int(minyear)
         )
     t4.metric(label = "여름 평균 강수량",value=str(summeravg)+"mm")
-    t5.metric(label="가장 촉촉한 여름", value = int(maxsummer))
-    t6.metric(label="가장 건조한 여름", value=int(minsummer))
+    t5.metric(label="가장 비가 많이 내린 여름", value = int(maxsummer))
+    t6.metric(label="가장 비가 덜 내린 여름", value=int(minsummer))
 
 
 
