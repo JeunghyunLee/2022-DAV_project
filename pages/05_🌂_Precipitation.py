@@ -9,7 +9,11 @@ plt.style.use('ggplot')
 
 st.markdown(
         '''## :umbrella_with_rain_drops: 강수량''')
-
+# 펼쳐지는 페이지 설정
+with st.expander("설명"):
+     st.write("""
+            **강수량**의 장기적인 변화 추세로 최근 30년은 과거 30년에 비해, 연 강수량이 135.4㎜ 증가하였고, 강수일수는 21.2일 감소하였습니다. 집중호우와 같은 극한 강수 발생일수도 증가하는 추세에 있습니다. 
+        """)
 
 c = "rainfall"
 r1=10

@@ -77,6 +77,13 @@ df=loaddata()
 # 상단 제목
 st.markdown(
         '''## :thermometer: 기온''')
+        
+# 펼쳐지는 페이지 설정
+with st.expander("설명"):
+     st.write("""
+            고온 극한기후지수 중 **여름 일수**는 일 최고기온이 25℃ 이상인 날의 연중 일수를 의미합니다.
+        """)
+        
 with st.container():
     res = df.groupby(['year','location']).mean()[['avg']].reset_index()
     gb = res.groupby('year')
