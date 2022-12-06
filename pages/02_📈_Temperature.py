@@ -29,6 +29,11 @@ def loaddata():
         df['date'] = df.date.apply(lambda x: pd.Timestamp(x))
         df['year'] = df.date.apply(lambda x: x.year)
         df['month'] = df.date.apply(lambda x: x.month)
+        df['season'] = '겨울'
+        df.loc[(df.month>=3)&(df.month<=5),'season'] = '봄'
+        df.loc[(df.month>=6)&(df.month<=8),'season'] = '여름'
+        df.loc[(df.month>=9)&(df.month<=11),'season'] = '가을'
+
         df['location'] = area
         res = pd.concat([res,df])
     res=res.reset_index()
@@ -106,36 +111,29 @@ with st.container():
     # 선택한 지역, 연도 filter
     df_filtered = df[(df['location'] == region) ]
 
-
+    wintermean = df_filtered[df_filtered.season=='겨울']['avg'].mean()
+    summermean = df_filtered[df_filtered.season=='여름']['avg'].mean()
+    
     kpi2.metric(
         label=f"겨울과 여름 평균 기온",
-        value=str(round(
-            df_filtered[df_filtered['month'].isin([12, 1, 2])]
-            ['avg'].mean()
-            )) + '°C,  ' +  str(round(
-            df_filtered[df_filtered['month'].isin([6, 7, 8])]
-            ['avg'].mean()
-            )) + '°C'
-    )
+        value=str(round(wintermean))+'°C, '+str(round(summermean))+'°C'
+        )
 
 
-    highestyear = df_filtered[(df_filtered['month'].isin([6, 7, 8]))].groupby(by = 'year').mean().reset_index()
-    highestyear = highestyear.sort_values(by = 'max', ascending = False)[['year', 'max']].iloc[0, :]
-    # st.write(highestyear)
-
+    summeravg = df_filtered[df_filtered.season=='여름'].groupby('year').mean()
+    highestyear = summeravg['max'].idxmax()
+    winteravg = df_filtered[df_filtered.season=='겨울'].groupby('year').mean()
+    lowestyear = winteravg['min'].idxmin()
     kpi3.metric(
         label="가장 더웠던 해 🥵",
-        value= int(highestyear[0]),
+        value= int(highestyear),
         # delta= 'goes up to '+ str(round(highestyear[1], 1)),
         help = 'By average of summer max temp'
     )
 
-    lowestyear = df_filtered[(df_filtered['month'].isin([12, 1, 2]))].groupby(by = 'year').mean().reset_index()
-    lowestyear = lowestyear.sort_values(by = 'min', ascending = True)[['year', 'min']].iloc[0,:]
-
     kpi4.metric(
         label="가장 추웠던 해 🥶",
-        value= int(lowestyear[0]),
+        value= int(lowestyear),
         # delta= 'goes down to' + str(round(lowestyear[1], 1)),
         help = 'By average of winter min temp'
     )
