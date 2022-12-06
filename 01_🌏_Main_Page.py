@@ -7,7 +7,8 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded",
     menu_items={
-        'About': "# 2022 winter Data Sciencen and Visualization project. Contributors:  "
+        'About': ''' # 2022 데이터 시각화 : 나연, 성만, 정현, 채린, 한휘
+                     Reference : https://www.tumblbug.com/meltingearth'''
     }
 )
 
@@ -38,7 +39,7 @@ with st.container():
     fig_col1, fig_col2 = st.columns(2)
     with fig_col1 :
         # Embed a youtube video
-        st.markdown('##### Netflix: See what three degrees of global warming looks like')
+        st.markdown('##### Netflix: Our planet, Frozen Worlds')
         st_player("https://youtu.be/cTQ3Ko9ZKg8")
         
     with fig_col2 : 
