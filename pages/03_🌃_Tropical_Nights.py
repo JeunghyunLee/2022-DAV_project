@@ -103,7 +103,7 @@ with st.container():
 
 with st.container():
     st.markdown("""---""")
-    s1,s2 = st.columns([1,5])
+    s1,s2 = st.columns([1,4])
     with s1:
         region = st.selectbox('',areas, label_visibility='collapsed')
     with s2:
