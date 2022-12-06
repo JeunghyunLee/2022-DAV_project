@@ -45,7 +45,7 @@ def animation(speed = 0.1):
         hist.loc[year] = mdf['data'].sum()
         # 지도 그리기
         mapfig=getmap(mdf,col='data', rng=rng)
-        hist.plot(ax = hax, color='black')
+        hist.plot(ax = hax, color='red', title="Yearly Sum")
         with label:
             st.text(year)
         with e1:
@@ -85,7 +85,7 @@ with st.container():
     # 지도 그리기
     histfig,hax = plt.subplots()
     mapfig = getmap(mdf,col='data', rng=rng)
-    hist.plot(ax = hax,color = 'black')
+    hist.plot(ax = hax,color = 'red', title="Yearly Sum")
 
     with label:
         st.text(year)

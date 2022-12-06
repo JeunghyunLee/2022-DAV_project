@@ -48,7 +48,7 @@ def animation(speed = 0.01):
         hist.loc[year] = mdf['avg'].mean()
         # 지도 그리기
         mapfig=getmap(mdf, col='avg',rng=rng)
-        hist.plot(ax = hax, color='black')
+        hist.plot(ax = hax, color='black', title="Yearly Average")
         
         with label:
             st.text(year)
@@ -59,8 +59,6 @@ def animation(speed = 0.01):
                 mapfig=getmap(mdf,col='avg',rng=(9,20))
                 st.plotly_chart(mapfig, use_container_width = True)
             with c2:
-                hist.plot(ax = hax, color='black')
-                plt.title("Average Temperature")
                 st.pyplot(histfig)
         time.sleep(speed)
 
@@ -97,8 +95,7 @@ with st.container():
                 mapfig = getmap(mdf, col='avg',rng=rng)
                 st.plotly_chart(mapfig, use_container_width = True)
             with c2:
-                hist.plot(ax = hax,color = 'black')
-                plt.title("Average Temperature")
+                hist.plot(ax = hax,color = 'black', title = "Yearly Average")
                 st.pyplot(histfig)
         button = st.button("Play",on_click=animation)
 
@@ -137,6 +134,7 @@ with st.container():
         # delta= 'goes down to' + str(round(lowestyear[1], 1)),
         help = 'By average of winter min temp'
     )
+
 
 densityyear = df_filtered.groupby(by = ['year']).mean().reset_index()[['year', 'max']]
 densityyear = densityyear.transpose()

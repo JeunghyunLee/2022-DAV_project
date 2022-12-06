@@ -70,7 +70,7 @@ def rain_animation(gb, c, rng, speed=0.1):
         hist.loc[year] = mdf[c].std()
     
         mapfig=getmap(mdf,col=c,rng=rng)
-        hist.plot(ax=hax, color='blue')
+        hist.plot(ax=hax, color='blue', title = "Yearly Standard Deviation")
         with e1:
             st.text(year)
         with e2:
@@ -78,7 +78,6 @@ def rain_animation(gb, c, rng, speed=0.1):
             with c1:
                 st.plotly_chart(mapfig,use_container_width=True)
             with c2:
-                st.text("도별 표준편차")
                 st.pyplot(histfig)
         time.sleep(speed)
 
@@ -98,7 +97,7 @@ with st.container():
     hist = gb.std()[c].loc[:year]
     
     mapfig=getmap(mdf,col=c,rng=rng)
-    hist.plot(ax=hax,color='blue')
+    hist.plot(ax=hax,color='blue',title = "Yearly Standard Deviation")
     with e1:
         st.text(year)
     with e2:
@@ -106,7 +105,6 @@ with st.container():
         with c1:
             st.plotly_chart(mapfig,use_container_width=True)
         with c2:
-            st.text("도별 표준편차")
             st.pyplot(histfig)
     st.button("Play",on_click=rain_animation,args=(gb,c,(500,2000)))
 
