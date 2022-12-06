@@ -34,10 +34,10 @@ def animation(speed = 0.1):
     for year,data in gb:
         hax.clear()
         mdf = to_map_df(data,datacol = ['data'])
-        hist.loc[year] = df[(df['location']=='전국') & (df['year']== year)]['data'].iloc[0]
+        hist.loc[year] = mdf.sum()['data']
         # 지도 그리기
         mapfig=getmap(mdf, col='data', rng=rng)
-        hist.plot(ax = hax, color='black')
+        hist.plot(ax = hax, color='purple',title='Yearly Sum')
         with label:
             st.text(year)
         with e1:
@@ -73,7 +73,7 @@ with st.container():
     # 지도 그리기
     histfig,hax = plt.subplots()
     mapfig = getmap(mdf,col='data', rng=rng)
-    hist.plot(ax = hax,color = 'black')
+    hist.plot(ax = hax,color = 'purple',title='Yearly Sum')
 
     with label:
         st.text(year)
