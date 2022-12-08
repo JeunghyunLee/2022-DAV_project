@@ -181,7 +181,7 @@ with st.container():
     print(counts)
     seasonal=seasonal.merge(counts,on=['year','season'])
     seasonal['percent'] = seasonal[c]/seasonal['total']
-
+    seasonal['percent'] = seasonal['percent'].apply(lambda x: round(x,2))
     fig = px.bar(seasonal, x='year', y=c,color='season',category_orders={'season':['봄','여름','가을','겨울']}, hover_data=['percent','강수일수'])
     st.plotly_chart(fig)
 
