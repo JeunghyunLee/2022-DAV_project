@@ -6,7 +6,8 @@ import time
 import streamlit as st
 import plotly.express as px
 from sklearn.linear_model import LinearRegression
-
+from plotly.subplots import make_subplots
+import plotly.graph_objects as go
 rng=(0,20)
 path = 'data_temperature/'
 
