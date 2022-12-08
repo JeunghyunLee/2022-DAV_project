@@ -10,16 +10,6 @@ from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 rng=(0,20)
 path = 'data_temperature/'
-
-st.set_page_config(
-    page_title= 'Temperature', 
-    page_icon = ':sunny:',
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        'About': "# 2022 winter Data Science and Visualization project."
-    }
-)
     
 @st.cache
 def loaddata():
