@@ -146,15 +146,6 @@ with st.container():
 
     ## 강수일수
     temp['israin'] = temp[c]>0.1
-    summercount = temp[temp.season=='여름'].groupby('year').sum()['israin']
-    totalcount = temp.groupby('year').sum().loc[years[1]:]['israin']
-    # fraction=summercount/totalcount
-    # fig,ax = plt.subplots()
-    # #summercount.plot(ax=ax,label='summer')
-    # totalcount.plot(kind='bar',ax=ax,label='days',color='blue')
-    # fraction.plot(ax=ax,secondary_y=True,label='summer fraction',color='red')
-    # fig.legend()
-    # st.pyplot(fig)
 
     yearsum = temp.groupby('year').sum()[c].loc[years[1]:]
     avgyear = round(yearsum.mean())
@@ -180,16 +171,17 @@ with st.container():
     t6.metric(label="가장 비가 덜 내린 여름", value=int(minsummer))
 
 
-
-with st.container():
-    # load data and preprocessing labels
     df = raindata[raindata.location==region]
     seasonal = df.groupby(['year','season']).sum()[c].loc[years[1]:].reset_index()
     ys = yearsum.reset_index()
     ys.columns=['year','total']
     seasonal=seasonal.merge(ys,on='year')
+    counts = temp.groupby(['year','season']).sum()['israin'].reset_index()
+    counts.columns=['year','season','강수일수']
+    print(counts)
+    seasonal=seasonal.merge(counts,on=['year','season'])
     seasonal['percent'] = seasonal[c]/seasonal['total']
 
-    fig = px.bar(seasonal, x='year', y=c,color='season',category_orders={'season':['봄','여름','가을','겨울']}, hover_data=['percent'])
+    fig = px.bar(seasonal, x='year', y=c,color='season',category_orders={'season':['봄','여름','가을','겨울']}, hover_data=['percent','강수일수'])
     st.plotly_chart(fig)
 
